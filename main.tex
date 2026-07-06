@@ -38,30 +38,30 @@ of Graphs}
 \email{naslund.math@gmail.com}
 
 \begin{abstract}
-A finite $d$-regular graph $G$ on $V$ vertices is said to be \emph{one-sided
-Ramanujan} if its second largest adjacency eigenvalue $\lambda_{2}(G)$
-is at most $2\sqrt{d-1}$, the spectral radius of the infinite $d$-regular
-tree. Miller, Novikoff, and Sabelli \cite{MillerNovikoffSabelli2008}
-conjectured that the probability of being Ramanujan tends to approximately
-$52\%$. Analyzing $1.3\times10^{8}$ samples of the largest new eigenvalue
-across families of random regular graphs and random covers, we find
-that the $52\%$ was a finite size artifact of power law fits over
-small sizes, and that
+For a connected base graph $B$, the eigenvalues of a random degree
+$k$ cover of $B$ split into those of $B$ and $(k-1)\left|V(B)\right|$
+new eigenvalues, and the cover is \emph{one-sided Ramanujan} if every
+new eigenvalue is at most the spectral radius $\rho(B)$ of the universal
+cover of $B$. Analyzing $1.3\times10^{8}$ samples of the largest
+new eigenvalue across nine families of random covers, we conjecture
+that its fluctuations follow the Tracy-Widom law of symmetry class
+$\beta\in\{1,2,4\}$ selected by the Frobenius-Schur type of the associated
+irreducible representation of the covering group, with centering at
+$\rho(B)$, and that the limiting probability that a random cover
+is Ramanujan is
 \[
-\lim_{V\rightarrow\infty}P\left(G\text{ is one-sided Ramanujan}\right)=F_{1}(0)=0.8319081\dots,
+\prod_{[\rho]\neq1}F_{\beta(\rho)}(0),
 \]
-where $F_{1}$ is the Tracy-Widom distribution of the Gaussian Orthogonal
-Ensemble in its original normalization, since proven by Huang, McKenzie,
-and Yau. Our main experimental finding
-concerns random covers of graphs: the largest new eigenvalue of a
-random cover fluctuates according to the Tracy-Widom law of symmetry
-class $\beta\in\{1,2,4\}$ selected by the Frobenius-Schur type of
-the associated irreducible representation of the covering group, with
-centering at the spectral radius of the universal cover of the base
-graph, and
-the limiting probability that a random cover is Ramanujan is an explicit
-product of Tracy-Widom functionals, which the data verifies to three
-decimal places.
+a product over the non-trivial representations up to conjugation,
+where $F_{\beta}$ is the Tracy-Widom distribution function in its
+original normalization, which the data verifies to three decimal places
+family by family. The simplest case, covers of a bouquet of loops,
+is the random $d$-regular graph: there the limit is $F_{1}(0)=0.8319081\dots$,
+not the approximately $52\%$ conjectured by Miller, Novikoff, and
+Sabelli \cite{MillerNovikoffSabelli2008}, a statement since proven
+by Huang, McKenzie, and Yau, and the agreement of our regular graph
+data with the proven law validates the pipeline carrying the cover
+results.
 \end{abstract}
 
 \date{\today}
@@ -69,148 +69,80 @@ decimal places.
 
 \section{Introduction}
 
-Let $G$ be a $d$-regular graph on $V$ vertices with adjacency matrix
-eigenvalues $d=\lambda_{1}\geq\lambda_{2}\geq\cdots\geq\lambda_{V}$.
-The spectral gap $d-\lambda_{2}$ controls the expansion of $G$,
-and the extent to which it can be large is governed by the spectral
-radius $2\sqrt{d-1}$ of the infinite $d$-regular tree. Alon and
-Boppana (see Nilli \cite{Nilli1991}) proved that for every $d$-regular
-graph on $V$ vertices
-\[
-\lambda_{2}(G)\geq2\sqrt{d-1}-\frac{C_{d}}{\log V}
-\]
-for a constant $C_{d}>0$, and so $2\sqrt{d-1}$ is the best spectral
-gap achievable by an infinite family. Following Lubotzky, Phillips,
-and Sarnak \cite{LubotzkyPhillipsSarnak1988}, a $d$-regular graph
-is called \emph{Ramanujan} if every eigenvalue other than $\pm d$
-is at most $2\sqrt{d-1}$ in absolute value, and \emph{one-sided Ramanujan}
-if
-\[
-\lambda_{2}(G)\leq2\sqrt{d-1}.
-\]
-Lubotzky, Phillips, and Sarnak \cite{LubotzkyPhillipsSarnak1988}
-and independently Margulis \cite{Margulis1988} constructed infinite
-families of Ramanujan graphs when $d-1$ is prime, using deep results
-from number theory, and Marcus, Spielman, and Srivastava \cite{MarcusSpielmanSrivastava2015}
-proved that bipartite Ramanujan graphs exist for every degree. Whether
-non-bipartite Ramanujan graphs exist for every degree remains open.
-In a different direction, Alon \cite{Alon1986} conjectured that random
-$d$-regular graphs are nearly Ramanujan, that is $\lambda_{2}\leq2\sqrt{d-1}+\epsilon$
-asymptotically almost surely for every $\epsilon>0$, and this was
-proven by Friedman \cite{Friedman2008}.
+A degree $k$ cover (or $k$-lift) $H$ of a connected base graph $B$
+is obtained by assigning to each edge of $B$ a permutation in $S_{k}$,
+and the eigenvalues of $H$ split into the \emph{old} eigenvalues,
+which are those of $B$, and the remaining $(k-1)\left|V(B)\right|$
+\emph{new} eigenvalues. Random covers were introduced as a combinatorial
+construction of expanders by Amit and Linial \cite{AmitLinial2002},
+and the extremal behavior of their new eigenvalues is governed by
+the spectral radius $\rho(B)$ of the universal cover of $B$: Friedman
+\cite{Friedman2003} formulated the relative Alon conjecture, that
+the largest new eigenvalue of a random degree $k$ cover of $B$ is
+at most $\rho(B)+\epsilon$ asymptotically almost surely, successive
+bounds were given by Lubetzky, Sudakov, and Vu \cite{LubetzkySudakovVu2011}
+and by Puder \cite{Puder2015}, and the conjecture was proven for
+regular base graphs by Friedman and Kohler \cite{FriedmanKohler2014}
+and in general by Bordenave \cite{Bordenave2020} (see also \cite{BordenaveCollins2019}).
+Accordingly, we call a cover $H$ of $B$ \emph{one-sided Ramanujan}
+if every new eigenvalue is at most $\rho(B)$. When $B$ is $d$-regular
+the universal cover is the $d$-regular tree and $\rho(B)=2\sqrt{d-1}$,
+the threshold of the classical Ramanujan property, and no infinite
+family does better, by the Alon-Boppana bound (see Nilli \cite{Nilli1991}).
+When $B$ is the bouquet of $d/2$ loops on a single vertex, a random
+degree $k$ cover of $B$ is precisely the permutation model of a
+random $d$-regular graph on $k$ vertices, with new eigenvalues its
+non-trivial eigenvalues. Covers also carry the constructive side of
+the Ramanujan story: Lubotzky, Phillips, and Sarnak \cite{LubotzkyPhillipsSarnak1988}
+and independently Margulis \cite{Margulis1988} built infinite Ramanujan
+families when $d-1$ is prime, whether non-bipartite Ramanujan graphs
+exist for every degree remains open, and with covers in hand, Bilu
+and Linial \cite{BiluLinial2006} conjectured that every $d$-regular
+graph has a $2$-cover whose new eigenvalues all lie in $[-2\sqrt{d-1},2\sqrt{d-1}]$,
+which would settle it. Marcus, Spielman, and Srivastava \cite{MarcusSpielmanSrivastava2015}
+proved the one-sided statement for bipartite graphs, and Hall, Puder,
+and Sawin \cite{HallPuderSawin2018} proved that every connected loopless
+graph has a one-sided Ramanujan cover of every degree.
 
-Friedman's theorem localizes $\lambda_{2}$ at the Ramanujan threshold
-but says nothing about which side of the threshold it falls on, and
-Sarnak \cite{Sarnak2004} raised the question of whether a positive
-proportion of random $d$-regular graphs are Ramanujan, reporting
-early experiments of Novikoff and already pointing to the Tracy-Widom
-law. The first
-serious numerical attack on this question was made in 2008 by Miller,
-Novikoff, and Sabelli \cite{MillerNovikoffSabelli2008}, hereafter
-MNS. Sampling $1000$ graphs per size
-from bipartite and perfect matching models of $d$-regular graphs
-with $d\in\{3,4,7,10\}$ and $V\leq20{,}000$, with $100{,}000$ graphs
-at three selected sizes, and motivated by the numerical evidence of
-Gaussian Orthogonal Ensemble spacing statistics in the bulk found by
-Jakobson, Miller, Rivin, and Rudnick \cite{JakobsonMillerRivinRudnick1999},
-they gave evidence that the fluctuations of $\lambda_{2}$ follow the
-$\beta=1$ Tracy-Widom law of random matrix theory \cite{TracyWidom1996},
-the law of the largest eigenvalue of the Gaussian Orthogonal Ensemble. Writing $\mu_{V}$ and $\sigma_{V}$
-for the mean and standard deviation of $\lambda_{2}$ over graphs
-of size $V$, they fitted power laws
+The relative Alon theorem localizes the largest new eigenvalue at
+the threshold but says nothing about which side of it the eigenvalue
+falls on, and the question of this paper is the finer one: how does
+the largest new eigenvalue of a random cover fluctuate around $\rho(B)$,
+and what proportion of random covers is Ramanujan? At the bouquet
+this is a question with history. Alon \cite{Alon1986} conjectured
+that random $d$-regular graphs are nearly Ramanujan, Friedman \cite{Friedman2008}
+proved it, and Sarnak \cite{Sarnak2004} asked whether a positive
+proportion is Ramanujan outright, reporting early experiments of Novikoff
+already pointing to the Tracy-Widom law. The first serious numerical
+attack was made in 2008 by Miller, Novikoff, and Sabelli \cite{MillerNovikoffSabelli2008},
+hereafter MNS. Writing $d=\lambda_{1}\geq\lambda_{2}\geq\cdots\geq\lambda_{V}$
+for the adjacency eigenvalues of a $d$-regular graph on $V$ vertices,
+they sampled $1000$ graphs per size from bipartite and perfect matching
+models with $d\in\{3,4,7,10\}$ and $V\leq20{,}000$, with $100{,}000$
+graphs at three selected sizes, and, motivated by the numerical evidence
+of Gaussian Orthogonal Ensemble spacing statistics in the bulk found
+by Jakobson, Miller, Rivin, and Rudnick \cite{JakobsonMillerRivinRudnick1999},
+gave evidence that the fluctuations of $\lambda_{2}$ follow the $\beta=1$
+Tracy-Widom law of random matrix theory \cite{TracyWidom1996}. Writing
+$\mu_{V}$ and $\sigma_{V}$ for the mean and standard deviation of
+$\lambda_{2}$ over graphs of size $V$, they fitted power laws
 \[
 2\sqrt{d-1}-\mu_{V}\sim c_{\mu}V^{m},\ \ \ \sigma_{V}\sim c_{\sigma}V^{s},
 \]
-and found best fit exponents $m$ between $-0.79$ and $-0.83$ against
-$s$ between $-0.71$ and $-0.73$ for their $d=3$ families. Since
-their fitted $m$ was steeper than their fitted $s$, the threshold
-$2\sqrt{d-1}$ sits asymptotically at the mean of the distribution,
-and they were led to conjecture that the limiting probability of being
-one-sided Ramanujan is the mass of the Tracy-Widom law to the left
-of its mean,
+found best fit exponents $m$ between $-0.79$ and $-0.83$ against
+$s$ between $-0.71$ and $-0.73$, and were led to conjecture that
+the limiting probability of being one-sided Ramanujan is the mass
+of the Tracy-Widom law to the left of its mean,
 \begin{equation}
 F_{1}(\mu_{TW_{1}})=0.519652\dots,\label{eq:mns_52_percent}
 \end{equation}
-approximately $52\%$, with $27\%\approx52\%^{2}$ of non-bipartite
-graphs Ramanujan on both sides.
+approximately $52\%$.
 
-The fluctuation question for random regular graphs has since been
-answered. For degrees growing with the number of vertices, Bauerschmidt,
-Huang, Knowles, and Yau \cite{BauerschmidtHuangKnowlesYau2020} proved
-Tracy-Widom fluctuations for $V^{2/9+\mathfrak{c}}\leq d\leq V^{1/3-\mathfrak{c}}$,
-He \cite{He2022} for $V^{2/3+\mathfrak{c}}\leq d\leq V/2$, and Huang
-and Yau \cite{HuangYau2023} for the full sparse regime $V^{\mathfrak{c}}\leq d\leq V^{1/3-\mathfrak{c}}$,
-concluding that about $69\%$ of such graphs are Ramanujan, and correcting
-the $27\%$ prediction: the correct one-sided constant is $83\%$,
-not $52\%$. For fixed degree, where Huang and Yau \cite{HuangYau2024}
-had located $\lambda_{2}$ within $V^{-c}$ of the threshold, Huang,
-McKenzie, and Yau \cite{HuangMcKenzieYau2024} proved the definitive
-result.
-\begin{thm}
-\label{thm:hmy}Let $d\geq3$ be fixed, let $G$ be a uniformly random
-simple $d$-regular graph on $V$ vertices, and let $A=d(d-1)/(d-2)^{2}$.
-Then
-\[
-(AV)^{2/3}\left(\frac{\lambda_{2}(G)}{\sqrt{d-1}}-2\right)\rightarrow TW_{1}
-\]
-in distribution as $V\rightarrow\infty$, where $TW_{1}$ is the $\beta=1$
-Tracy-Widom distribution in its original normalization. In particular,
-since the centering is exactly $2\sqrt{d-1}$,
-\[
-\lim_{V\rightarrow\infty}P\left(\lambda_{2}(G)\leq2\sqrt{d-1}\right)=F_{1}(0)=0.8319081\dots.
-\]
-\end{thm}
-Unfolding the constants, Theorem \ref{thm:hmy} states that the mean
-and standard deviation of $\lambda_{2}$ satisfy
-\begin{equation}
-2\sqrt{d-1}-\mu_{V}\approx\left|\mu_{TW_{1}}\right|c(d)V^{-2/3},\ \ \ \sigma_{V}\approx\sigma_{TW_{1}}c(d)V^{-2/3},\label{eq:hmy_constants}
-\end{equation}
-where $c(d)=\left(\frac{(d-2)^{2}}{d(d-1)}\right)^{2/3}\sqrt{d-1}$, and
-where $\mu_{TW_{1}}=-1.2065335746\dots$ and $\sigma_{TW_{1}}=1.2679830577\dots$
-are the mean and standard deviation of the un-recentered Tracy-Widom
-law, so that both of MNS's exponents equal $-2/3$ and the threshold
-sits $\left|\mu_{TW_{1}}\right|/\sigma_{TW_{1}}=0.951537\dots$ standard
-deviations to the right of the mean.
-
-We report on a numerical study, roughly a thousand times
-larger than that of MNS, of the largest new eigenvalue of random covers
-of graphs, a setting which contains the random regular graph as its
-simplest case and in which, outside one result on $2$-covers of dense
+We report on a numerical study of the largest new eigenvalue of random
+covers, roughly a thousand times larger than the experiment of MNS,
+in a setting in which, outside one result on $2$-covers of dense
 random regular graphs \cite{LiuZou2025}, the fluctuation theory is
 open.
-A degree $k$ cover (or $k$-lift) $H$ of a base graph $B$ is obtained
-by assigning to each edge of $B$ a permutation in $S_{k}$, and the
-eigenvalues of $H$ split into the \emph{old} eigenvalues, which are those
-of $B$, and the remaining $(k-1)\left|V(B)\right|$ \emph{new} eigenvalues. Random covers were
-introduced as a combinatorial construction of expanders by Amit and
-Linial \cite{AmitLinial2002}, and Bilu and Linial \cite{BiluLinial2006}
-conjectured that every $d$-regular graph has a $2$-cover
-whose new eigenvalues all lie in $[-2\sqrt{d-1},2\sqrt{d-1}]$, which
-would produce Ramanujan graphs of every degree. Marcus, Spielman,
-and Srivastava \cite{MarcusSpielmanSrivastava2015} proved the one-sided
-statement for bipartite graphs, and Hall, Puder, and Sawin \cite{HallPuderSawin2018}
-proved that every connected loopless graph has a one-sided Ramanujan
-cover of every degree. For random covers, Friedman \cite{Friedman2003}
-formulated the relative Alon conjecture, that the largest new eigenvalue
-of a random degree $k$ cover of $B$ is at most $\rho(B)+\epsilon$
-asymptotically almost surely, where $\rho(B)$ is the spectral radius
-of the universal cover of $B$. Successive bounds were given by Lubetzky,
-Sudakov, and Vu \cite{LubetzkySudakovVu2011} and by Puder \cite{Puder2015},
-and the conjecture was proven for regular base graphs by Friedman
-and Kohler \cite{FriedmanKohler2014} and in general by Bordenave \cite{Bordenave2020}
-(see also \cite{BordenaveCollins2019}). Accordingly, we call a cover
-$H$ of $B$ \emph{one-sided Ramanujan} if every new eigenvalue is
-at most $\rho(B)$. When $B$ is $d$-regular the universal cover
-is the $d$-regular tree and $\rho(B)=2\sqrt{d-1}$, and when $B$
-is the bouquet of $d/2$ loops on a single vertex, a random degree
-$k$ cover of $B$ is precisely the permutation model of a random
-$d$-regular graph on $k$ vertices, with new eigenvalues its non-trivial
-eigenvalues. The relative Alon conjecture is thus the exact analog
-of Friedman's theorem, and the question answered by Theorem \ref{thm:hmy}
-returns in general form: how does the largest new eigenvalue of a
-random cover fluctuate around $\rho(B)$, and what proportion of random
-covers are Ramanujan?
-
 Our data supports a precise and, to our knowledge, new answer: the
 limiting fluctuations follow the Tracy-Widom law of the random matrix
 symmetry class dictated by the representation theory of the cover.
@@ -294,27 +226,69 @@ for every such base graph $B$.
 The $\beta=1$ law in Conjecture \ref{conj:irregular_base} is forced
 by the picture above, since the standard representation of $S_{k}$
 is real for every $k$. Taking $B$ to be the bouquet of two loops
-recovers the $d=4$ case of Theorem \ref{thm:hmy} (in the permutation
-model), and so Conjecture \ref{conj:irregular_base} is the common
-generalization of the proven regular case to arbitrary base graphs.
+recovers the permutation model of random $4$-regular graphs, where
+the conjecture is now a theorem (Theorem \ref{thm:hmy} below), and
+so Conjecture \ref{conj:irregular_base} is the common generalization
+of the proven regular case to arbitrary base graphs.
 Both cases are tested in section \ref{sec:irregular} at five million
 covers per size of the fixed bases $K_{5}$ and $K_{5}-e$: each family
 selects the $TW_{1}$ law, and the empirical Ramanujan probabilities
 at $V=10{,}000$ are $0.83281$ and $0.82916$ against the conjectured
 $F_{1}(0)=0.8319081\dots$.
 
+At the bouquet, the conjectures above meet proven ground. For degrees
+growing with the number of vertices, Bauerschmidt, Huang, Knowles,
+and Yau \cite{BauerschmidtHuangKnowlesYau2020} proved Tracy-Widom
+fluctuations for $V^{2/9+\mathfrak{c}}\leq d\leq V^{1/3-\mathfrak{c}}$,
+He \cite{He2022} for $V^{2/3+\mathfrak{c}}\leq d\leq V/2$, and Huang
+and Yau \cite{HuangYau2023} for the full sparse regime $V^{\mathfrak{c}}\leq d\leq V^{1/3-\mathfrak{c}}$,
+concluding that about $69\%$ of such graphs are Ramanujan and correcting
+the prediction (\ref{eq:mns_52_percent}) of MNS: the correct one-sided
+constant is $83\%$, not $52\%$. For fixed degree, where Huang and
+Yau \cite{HuangYau2024} had located $\lambda_{2}$ within $V^{-c}$
+of the threshold, Huang, McKenzie, and Yau \cite{HuangMcKenzieYau2024}
+proved the definitive result.
+\begin{thm}
+\label{thm:hmy}Let $d\geq3$ be fixed, let $G$ be a uniformly random
+simple $d$-regular graph on $V$ vertices, and let $A=d(d-1)/(d-2)^{2}$.
+Then
+\[
+(AV)^{2/3}\left(\frac{\lambda_{2}(G)}{\sqrt{d-1}}-2\right)\rightarrow TW_{1}
+\]
+in distribution as $V\rightarrow\infty$, where $TW_{1}$ is the $\beta=1$
+Tracy-Widom distribution in its original normalization. In particular,
+since the centering is exactly $2\sqrt{d-1}$,
+\[
+\lim_{V\rightarrow\infty}P\left(\lambda_{2}(G)\leq2\sqrt{d-1}\right)=F_{1}(0)=0.8319081\dots.
+\]
+\end{thm}
+Unfolding the constants, Theorem \ref{thm:hmy} states that the mean
+and standard deviation of $\lambda_{2}$ satisfy
+\begin{equation}
+2\sqrt{d-1}-\mu_{V}\approx\left|\mu_{TW_{1}}\right|c(d)V^{-2/3},\ \ \ \sigma_{V}\approx\sigma_{TW_{1}}c(d)V^{-2/3},\label{eq:hmy_constants}
+\end{equation}
+where $c(d)=\left(\frac{(d-2)^{2}}{d(d-1)}\right)^{2/3}\sqrt{d-1}$, and
+where $\mu_{TW_{1}}=-1.2065335746\dots$ and $\sigma_{TW_{1}}=1.2679830577\dots$
+are the mean and standard deviation of the un-recentered Tracy-Widom
+law, so that both of MNS's exponents equal $-2/3$ and the threshold
+sits $\left|\mu_{TW_{1}}\right|/\sigma_{TW_{1}}=0.951537\dots$ standard
+deviations to the right of the mean. Numerically confirming a proven
+theorem is not a contribution, and we do not present the regular graph
+data as one: its role here is to validate the instrument, since the
+pipeline that recovers the proven law and its constants is the pipeline
+that carries the cover results.
+
 The conjectures above date to 2018 and were formulated jointly with
 Lior Silberman, following a suggestion of Peter Sarnak. All of the
 data reported here was generated by 2023, before the appearance of
 \cite{HuangMcKenzieYau2024}, with every family but the two fixed base
 ones predating \cite{HuangYau2023} as well, and so the pipeline was
-in no way tuned to the theorems it now confirms. This timing shapes how the
-paper should be read: the regular graph families of section \ref{sec:regular}
-are no longer evidence for a conjecture but a control experiment, and the value
-of that section lies in what the theorem does not address, namely
-the finite size behavior, the diagnosis of MNS's $52\%$, and the
-failure of the multigraph model. The cover families of sections \ref{sec:covers}
-and \ref{sec:irregular} are the substance of the paper.
+in no way tuned to the theorems it now confirms. The value of section
+\ref{sec:regular} accordingly lies in what the theorems do not address,
+namely the finite size behavior, the diagnosis of MNS's $52\%$, and
+the failure of the multigraph model, while the cover families of sections
+\ref{sec:covers} and \ref{sec:irregular} are the substance of the
+paper.
 
 We stress three differences between our experiment and that of MNS.
 First, scale: we use $5\times10^{6}$ samples per size against their
@@ -577,7 +551,7 @@ in its final displayed digit, consistent with the sampling fluctuation
 of the removed samples. All summary statistics were verified
 by independent recomputation from the raw samples.
 
-\section{\label{sec:regular}Random $4$-Regular Graphs}
+\section{\label{sec:regular}The Regular Graph Control Experiment}
 
 In this section we test the pipeline against Theorem \ref{thm:hmy}
 along the two simple $4$-regular series, diagnose the finite size
