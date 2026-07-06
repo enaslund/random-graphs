@@ -1,1 +1,18 @@
+# Python
 __pycache__/
+*.pyc
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.out
+*.synctex.gz
+main.log
+
+# run logs
+nohup.out
+*.log
+
+# OS
+.DS_Store

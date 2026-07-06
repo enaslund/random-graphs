@@ -68,11 +68,12 @@ family's own threshold.
   pipeline whose source is not included. Their values sit on a 10⁻¹² grid,
   coarser than machine precision. Do not pool them with the Python series
   without accounting for this.
-- A per-process seeding collision produced a small number of duplicated
-  batches within the abelian series. Duplicated batches agree to roughly
-  10⁻⁸, which is the effective reproducibility of the iterative eigensolver;
-  no summary statistic moves at the quoted precision when duplicates are
-  dropped.
+- A per-process seeding collision duplicated worker batches within the
+  abelian series: 452,508 of the 1.8 million base-graph batches (25%) are
+  redundant copies, concentrated at the smallest sizes (55-81% of batches at
+  n = 100-200, below 0.1% at n >= 1000). Duplicated batches agree to better
+  than 3×10⁻¹³; dropping them moves summary statistics by at most about two
+  units in their last displayed digit.
 - Quirks to be aware of when reading `scripts/`: the `trivial_eig` arguments
   in `complete_cover.py` and `irreg_cover.py` only steer the eigensolver's
   identity shift (base eigenvalues are filtered exactly, so the stale values

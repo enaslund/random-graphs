@@ -17,7 +17,8 @@ from scipy import stats as sps  # noqa: E402
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from dataset_utils import (  # noqa: E402
-    RAMANUJAN_THRESHOLD, REPO_ROOT, TW_MEAN, TW_STD, TW1_MEAN_OVER_STD,
+    ATOMS_K5, ATOMS_K5_MINUS_E, F_BETA_AT_0, MAX_LAW, RAMANUJAN_THRESHOLD,
+    REPO_ROOT, RHO_K5_MINUS_E, TW_MEAN, TW_STD, TW1_MEAN_OVER_STD,
     size_scaling_prefactor, tw, tw_cdf_standardized, tw_pdf_standardized,
     tw_quantile_standardized, tw_shape_moments,
 )
@@ -433,6 +434,126 @@ def fig_tail_k5():
 
 
 # ---------------------------------------------------------------------------
+# 2f. Outlier atoms: every far-outlier sample of the fixed-base families
+# against V, with the computed defect eigenvalues overlaid. The outliers
+# lock onto the atoms; frequencies decay like k^(1-r) by cycle rank.
+# ---------------------------------------------------------------------------
+
+def fig_outlier_atoms():
+    panels = [
+        ("irreg_covers", "irreg_covers_k5_minus_edge_cover_V{k}x5_N5000000.npy",
+         RHO_K5_MINUS_E, r"$\rho(K_5-e)$", ATOMS_K5_MINUS_E, "#8a5a2b",
+         "covers of $K_5-e$"),
+        ("k5_covers_complete_cover",
+         "k5_covers_complete_cover_V{k}x5_N5000000.npy",
+         RAMANUJAN_THRESHOLD, r"$2\sqrt{3}$", ATOMS_K5, "#0d8ba3",
+         "covers of $K_5$"),
+    ]
+    fig, axes = plt.subplots(1, 2, figsize=(6.8, 3.1))
+    rng = np.random.default_rng(7)
+    for ax, (subdir, tmpl, rho, rho_label, atoms, color, title) in zip(axes, panels):
+        for k in (100, 200, 400, 1000, 2000):
+            V = 5 * k
+            x = np.load(os.path.join(REPO_ROOT, "data", subdir,
+                                     tmpl.format(k=k)))
+            cut = x.mean() + 8 * x.std(ddof=1)
+            out = x[x > cut]
+            del x
+            jitter = rng.uniform(0.88, 1.12, out.size)
+            ax.semilogx(V * jitter, out, ls="", marker="o", ms=2.4,
+                        color=color, alpha=0.6, markeredgewidth=0)
+        ax.axhline(rho, ls="--", color=INK, lw=0.9)
+        ax.annotate(rho_label, xy=(1.01, rho),
+                    xycoords=("axes fraction", "data"), fontsize=6,
+                    color=INK, va="center")
+        for name, value in atoms.items():
+            ax.axhline(value, ls=(0, (1, 3)), color=INK_2, lw=0.9)
+            label = (r"$\lambda_{K_4}$" if name.startswith("K4")
+                     else "rank $4$")
+            if not name.endswith("4a"):
+                ax.annotate(f"{label}: {value:.5f}", xy=(1.01, value),
+                            xycoords=("axes fraction", "data"), fontsize=6,
+                            color=INK_2, va="center")
+        ax.set_xlabel("number of vertices $V$")
+        ax.set_title(title, fontsize=9)
+    axes[0].set_ylabel(
+        r"outlier eigenvalues $\lambda > \mathrm{mean} + 8\,\mathrm{std}$")
+    fig.suptitle("Far outliers lock onto the localized defect eigenvalues"
+                 " (dotted); frequencies decay like $k^{1-r}$", y=1.02)
+    fig.subplots_adjust(wspace=0.55)
+    return fig
+
+
+# ---------------------------------------------------------------------------
+# 2g. The approach to the limit: the deviation of the standardized ECDF
+# from TW1 is proportional to a fixed Edgeworth-type profile (t^2-1)f(t)
+# (a skewness deficit), with amplitude decaying like a power of V.
+# ---------------------------------------------------------------------------
+
+def fig_edgeworth():
+    t = np.linspace(-4.5, 5.5, 2001)
+    F = tw_cdf_standardized(1)(t)
+    f = tw_pdf_standardized(1)(t)
+    psi = (t ** 2 - 1) * f
+    norm2 = np.trapz(psi * psi, t)
+
+    series = [
+        ("simple", "data/simple/simple_deg4_V{V}_N5000000.npy",
+         (100, 200, 500, 1000, 2000, 5000, 10000, 20000), "#2a78d6", "o",
+         "4-regular simple (Python)"),
+        ("k5", "data/k5_covers_complete_cover/"
+         "k5_covers_complete_cover_V{k}x5_N5000000.npy",
+         (100, 200, 500, 1000, 2000, 5000, 10000), "#0d8ba3", "h",
+         "$K_5$ cover"),
+    ]
+    collapse_sizes = (200, 1000, 5000, 20000)
+    collapse = {}
+    fig, axes = plt.subplots(1, 2, figsize=(6.8, 2.9))
+    for name, tmpl, sizes, color, marker, label in series:
+        chats = []
+        for V in sizes:
+            path = tmpl.format(V=V, k=V // 5)
+            x = np.load(os.path.join(REPO_ROOT, path))
+            z = np.sort((x - x.mean()) / x.std(ddof=1))
+            del x
+            ecdf = np.searchsorted(z, t, side="right") / z.size
+            del z
+            delta = ecdf - F
+            c = np.trapz(delta * psi, t) / norm2
+            chats.append(abs(c))
+            if name == "simple" and V in collapse_sizes:
+                collapse[V] = delta / c
+        axes[0].loglog(sizes, chats, marker=marker, ms=4, lw=1.2,
+                       color=color, label=label)
+        if name == "simple":
+            slope, intercept = np.polyfit(np.log(sizes), np.log(chats), 1)
+            Vline = np.array([70.0, 30000.0])
+            axes[0].loglog(Vline, np.exp(intercept) * Vline ** slope, "--",
+                           color=INK, lw=0.9,
+                           label=rf"fit $\propto V^{{{slope:.2f}}}$")
+    axes[0].set_xlabel("number of vertices $V$")
+    axes[0].set_ylabel(r"amplitude $|\hat{c}(V)|$")
+    axes[0].set_title("Edgeworth amplitude of the deviation")
+    axes[0].legend(fontsize=6.5, loc="lower left")
+
+    shades = ["#c5d9f2", "#8db8e8", "#4f8fd9", "#1c5fae"]
+    for shade, V in zip(shades, collapse_sizes):
+        axes[1].plot(t, collapse[V], color=shade, lw=1.1,
+                     label=f"$V={V}$")
+    axes[1].plot(t, psi, "--", color=INK, lw=1.2,
+                 label=r"profile $(t^2-1)\,\tilde{f}_1(t)$")
+    axes[1].set_xlabel(r"standardized eigenvalue $t$")
+    axes[1].set_ylabel(r"$(F_V(t) - \tilde{F}_1(t))\,/\,\hat{c}(V)$")
+    axes[1].set_title("Rescaled deviations collapse")
+    axes[1].legend(fontsize=6.5, loc="lower right")
+    axes[1].set_xlim(-4.5, 5.5)
+    fig.subplots_adjust(wspace=0.34)
+    fig.suptitle("The deviation of the standardized ECDF from $TW_1$ is a"
+                 " single skewness profile with power-law amplitude", y=1.03)
+    return fig
+
+
+# ---------------------------------------------------------------------------
 # 2e. MNS's decisive statistic at 50x their sample size: the observed mass
 # to the left of the sample mean, vs the values predicted by each law
 # ---------------------------------------------------------------------------
@@ -456,6 +577,13 @@ def fig_mass_left(rows):
         ax.axhline(theta, ls=ls, color=INK, lw=0.9,
                    label=rf"TW $\beta={beta}$: {theta:.6f}")
     ax.axhline(0.5, ls=":", color=MUTED, lw=0.9, label="normal: 0.5")
+    for key, name in (("max12", "$\\max(TW_1,TW_2)$"),
+                      ("max22", "$\\max(TW_2,TW_2')$")):
+        theta = MAX_LAW[key][1]
+        ax.axhline(theta, ls=(0, (1, 3)), color=INK_2, lw=0.9)
+        ax.annotate(f"{name}: {theta:.5f}", xy=(1.01, theta),
+                    xycoords=("axes fraction", "data"), fontsize=5.5,
+                    color=INK_2, va="center")
     ax.set_xlabel("number of vertices $V$")
     ax.set_ylabel("observed mass left of the sample mean")
     ax.set_title("MNS's discriminating statistic: mass left of the mean\n"
@@ -481,6 +609,15 @@ def fig_ratio(rows):
                     label=label)
     ax.axhline(TW1_MEAN_OVER_STD, ls="--", color=INK, lw=0.9,
                label=rf"$|\mu_{{TW_1}}|/\sigma_{{TW_1}} = {TW1_MEAN_OVER_STD:.6f}$")
+    ratio_refs = ((-TW_MEAN[2] / TW_STD[2], "$TW_2$"),
+                  (-TW_MEAN[4] / TW_STD[4], "$TW_4$"),
+                  (MAX_LAW["max12"][0], "$\\max(TW_1,TW_2)$"),
+                  (MAX_LAW["max22"][0], "$\\max(TW_2,TW_2')$"))
+    for value, name in ratio_refs:
+        ax.axhline(value, ls=(0, (1, 3)), color=INK_2, lw=0.9)
+        ax.annotate(f"{name}: {value:.4f}", xy=(1.01, value),
+                    xycoords=("axes fraction", "data"), fontsize=5.5,
+                    color=INK_2, va="center")
     ax.set_xlabel("number of vertices $V$")
     ax.set_ylabel(r"$(\rho - \mathrm{mean}(\lambda))\,/\,\mathrm{std}(\lambda)$")
     ax.set_title("Mean gap below the threshold $\\rho$ in units of the"
@@ -509,6 +646,14 @@ def fig_prob_ramanujan(rows):
     ax.set_xscale("log")
     ax.axhline(F1_0, ls="--", color=INK, lw=0.9,
                label=rf"$F_1(0) = {F1_0:.6f}$")
+    for value, name in ((F_BETA_AT_0[2], "$F_2(0)$"),
+                        (F_BETA_AT_0[4], "$F_4(0)$"),
+                        (MAX_LAW["max12"][2], "$F_1(0)F_2(0)$"),
+                        (MAX_LAW["max22"][2], "$F_2(0)^2$")):
+        ax.axhline(value, ls=(0, (1, 3)), color=INK_2, lw=0.9)
+        ax.annotate(f"{name}: {value:.5f}", xy=(1.01, value),
+                    xycoords=("axes fraction", "data"), fontsize=5.5,
+                    color=INK_2, va="center")
     ax.set_xlabel("number of vertices $V$")
     ax.set_ylabel(r"empirical $P(\lambda \leq \rho)$")
     ax.set_title("Empirical probability of being (one-sided) Ramanujan")
@@ -592,11 +737,11 @@ def fig_cdf_vs_tw1(z_sorted, dataset_label, ks_D, ks_p):
     return fig
 
 
-def fig_qq_vs_tw1(z_sorted, dataset_label):
+def fig_qq_vs_tw1(z_sorted, dataset_label, beta=1):
     # upper limit 0.999: the TracyWidom package's cdfinv returns NaN in the
     # extreme right tail (p > ~0.9994)
     p = np.linspace(1e-4, 0.999, 1999)
-    theory = tw_quantile_standardized(1)(p)
+    theory = tw_quantile_standardized(beta)(p)
     empirical = np.quantile(z_sorted, p)
     fig, ax = plt.subplots(figsize=(3.7, 3.7))
     lims = [min(theory.min(), empirical.min()) - 0.2,
@@ -605,9 +750,9 @@ def fig_qq_vs_tw1(z_sorted, dataset_label):
     ax.plot(theory, empirical, color="#2a78d6", lw=1.3,
             label="quantile pairs")
     ax.set_xlim(lims), ax.set_ylim(lims)
-    ax.set_xlabel("Tracy–Widom $\\beta=1$ quantiles (standardized)")
+    ax.set_xlabel(f"Tracy–Widom $\\beta={beta}$ quantiles (standardized)")
     ax.set_ylabel("data quantiles (standardized)")
-    ax.set_title("QQ plot vs Tracy–Widom $\\beta=1$\n"
+    ax.set_title(f"QQ plot vs Tracy–Widom $\\beta={beta}$\n"
                  f"{dataset_label}", fontsize=8.5)
     ax.legend(fontsize=7)
     ax.set_aspect("equal")
@@ -846,6 +991,25 @@ def main():
          "fixed-base K5/K5-e families (moments contaminated by thin "
          "far-outlier tails; see the standardized-tail figure) are "
          "omitted.")
+    save(fig_outlier_atoms(),
+         "outlier_atoms_k5_families.png",
+         "Every sample more than 8 standard deviations above the mean, "
+         "against V, for the K5-e and K5 cover families, with the computed "
+         "localized defect eigenvalues overlaid: rho, lambda(K4) = "
+         "3.3391340785 for K5-e (exactly 7/2 for K5), and the largest "
+         "cycle-rank-4 values. The outliers lock onto the atoms; their "
+         "frequencies decay like k^(1-r) where r is the cycle rank of the "
+         "seeding subgraph (measured exponents ~2 in the K4 window, ~3 "
+         "beyond it).")
+    save(fig_edgeworth(),
+         "edgeworth_amplitude_vs_size.png",
+         "The approach to the Tracy-Widom limit: the deviation of the "
+         "standardized empirical CDF from TW1 is proportional to the fixed "
+         "profile (t^2-1)*f(t) (an Edgeworth-type skewness deficit); the "
+         "left panel shows the fitted amplitude decaying like a power of V "
+         "(exponent about -0.45) for the simple 4-regular and K5-cover "
+         "families, the right panel the rescaled deviations collapsing "
+         "onto the profile.")
     save(fig_tail_k5(),
          "tail_survival_standardized_k5_families_V10000.png",
          "Standardized right tail P(lambda > x) at V=10,000 for the simple "
@@ -870,7 +1034,8 @@ def main():
          "Replication of MNS's decisive experiment at ~50x their sample "
          "size: the observed fraction of samples below the sample mean, "
          "vs the values predicted by Tracy-Widom beta=1 (0.519652), "
-         "beta=2 (0.515016), beta=4 (0.511072), and the normal (0.5). "
+         "beta=2 (0.515016), beta=4 (0.511069), the normal (0.5), and "
+         "the two maximum laws (0.53895 and 0.52193, dotted). "
          "With N = 1M-5M samples the binomial standard error is 2-5e-4, "
          "so the four candidate laws are separated by tens of standard "
          "errors.")
@@ -880,17 +1045,19 @@ def main():
          "Tracy-Widom GOE reference |mean|/std = 0.951538 (dashed) - the "
          "constant behind the 83% Ramanujan conjecture for regular "
          "graphs, which the 4-regular simple series approach. The cover "
-         "families plateau at family-dependent constants (abelian k=3 "
-         "~1.9, k=5 ~1.63, quaternion ~3.1), so each family has its own "
-         "limiting Ramanujan probability. (MNS conjectured this ratio "
-         "tends to 0.)")
+         "families plateau at the |mean|/std ratio of their own limit "
+         "laws, marked by the dotted reference lines (TW2 1.9640, TW4 "
+         "3.2061, max(TW1,TW2) 0.8099, max(TW2,TW2') 1.6219), so each "
+         "family has its own limiting Ramanujan probability. (MNS "
+         "conjectured this ratio tends to 0.)")
     save(fig_prob_ramanujan(rows),
          "prob_ramanujan_vs_size_all_families.png",
          "Empirical P(lambda <= rho) vs V for all families (rho = 2sqrt3 "
          "except for K5-e covers, where rho = 3.2628764659...), with the "
          "conjectured limit F_1(0) = 0.8319081 (un-recentered Tracy-Widom "
-         "GOE CDF at 0) for the plain 4-regular families; cover families "
-         "approach family-dependent limits.")
+         "GOE CDF at 0) for the beta=1 families; the other cover families "
+         "approach the dotted product-of-F_beta(0) limits (F_2(0), "
+         "F_4(0), F_1(0)F_2(0), F_2(0)^2).")
     save(fig_ks_simple(rows),
          "ks_statistic_vs_size_simple_regular.png",
          "KS distance of the standardized samples to standardized "
@@ -949,6 +1116,24 @@ def main():
              f"qq_vs_tracywidom1_{tag}.png",
              f"QQ plot of {relpath} against Tracy-Widom beta=1 "
              "(both standardized), probability range 1e-4 to 0.999.")
+        del z
+
+    for relpath, beta, tag, label in [
+        ("data/abelian_cover/abelian_cover_V5000x3_N100000x10_bdeg4.npy", 2,
+         "abelian3_V15000_N1000000",
+         "abelian $k=3$ covers, $V=15{,}000$, $N=10^{6}$"),
+        ("data/quaternion_rep/quaternion_deg4_V5000x4_N1000000.npy", 4,
+         "quaternion_V20000_N1000000",
+         "quaternion covers, $V=20{,}000$, $N=10^{6}$"),
+    ]:
+        x = np.load(os.path.join(REPO_ROOT, relpath))
+        z = np.sort((x - x.mean()) / x.std(ddof=1))
+        del x
+        save(fig_qq_vs_tw1(z, label, beta=beta),
+             f"qq_vs_tracywidom{beta}_{tag}.png",
+             f"QQ plot of {relpath} against Tracy-Widom beta={beta} "
+             "(both standardized), probability range 1e-4 to 0.999: "
+             "quantile-level evidence for the symmetry-class selection.")
         del z
 
     lines = [

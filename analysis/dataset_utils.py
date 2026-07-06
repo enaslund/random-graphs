@@ -92,6 +92,34 @@ def tw_shape_moments(beta):
     return TW_SHAPE_MOMENTS[beta]
 
 
+# F_beta(0) in the original normalization (Painleve II integration).
+F_BETA_AT_0 = {1: 0.8319081, 2: 0.9693728, 4: 0.9985742}
+
+# Statistics of the maximum laws for the mixed abelian covers, computed
+# from the same Painleve II grids assuming independent blocks on a common
+# scale: (|mean|/std, mass left of the mean, F(0), skewness, ex. kurtosis).
+MAX_LAW = {
+    "max12": (0.8099495, 0.5389455, 0.8064291, 0.5837056, 0.6702519),
+    "max22": (1.6219212, 0.5219304, 0.9396837, 0.3290093, 0.2254319),
+}
+
+# Localized "defect" eigenvalues (atoms) seeded by minimal dense subgraphs
+# in random covers, computed from the branch self-energy recursion on the
+# universal cover of the base (independently verified by planting the
+# subgraphs in actual covers). Cycle rank r subgraphs occur with
+# probability ~ k^(1-r).
+ATOMS_K5_MINUS_E = {
+    "K4 (rank 3)": 3.3391340785,
+    "rank 4a": 3.4162170797,
+    "rank 4b": 3.4519402932,
+}
+ATOMS_K5 = {
+    "K4 (rank 3)": 3.5,  # exactly 7/2
+    "rank 4a": 3.5708730604,
+    "rank 4b": 3.5936785200,
+}
+
+
 def size_scaling_prefactor(deg=DEG):
     """Conjectured d-dependent prefactor c(d) with
 

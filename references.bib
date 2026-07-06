@@ -68,7 +68,7 @@
   primaryClass  = {math.NA},
 }
 
-% Tabulates Tracy-Widom statistics to high precision; supports F_1(0) = 0.831913.
+% Tabulates Tracy-Widom statistics to high precision (F_1(0) = 0.8319081...).
 @article{Bornemann2010Review,
   author        = {Bornemann, Folkmar},
   title         = {On the numerical evaluation of distributions in random matrix theory: a review},
@@ -300,10 +300,15 @@
   primaryClass  = {math.PR},
 }
 
-@misc{He2022,
+@article{He2022,
   author        = {He, Yukun},
   title         = {Spectral gap and edge universality of dense random regular graphs},
-  year          = {2022},
+  journal       = {Communications in Mathematical Physics},
+  volume        = {405},
+  number        = {8},
+  pages         = {Paper No. 181},
+  year          = {2024},
+  doi           = {10.1007/s00220-024-05063-x},
   eprint        = {2203.07317},
   archivePrefix = {arXiv},
   primaryClass  = {math.PR},
@@ -379,4 +384,152 @@
   pages   = {273--298},
   year    = {2002},
   doi     = {10.1017/S0963548301005065},
+}
+
+% ------------------------------------------------------------------
+% Added 2026-07-06 after a literature audit (all data web-verified:
+% Crossref/DOI, arXiv, publisher pages).
+% ------------------------------------------------------------------
+
+% Published simulation of random n-lifts of three cubic Ramanujan bases
+% (their Section 1.2, Figures 1-2) with the conjecture that the Ramanujan
+% probability of a random lift converges to a constant (their Conjecture 3).
+@article{LubetzkySudakovVu2011,
+  author        = {Lubetzky, Eyal and Sudakov, Benny and Vu, Van},
+  title         = {Spectra of lifted {R}amanujan graphs},
+  journal       = {Advances in Mathematics},
+  volume        = {227},
+  number        = {4},
+  pages         = {1612--1645},
+  year          = {2011},
+  doi           = {10.1016/j.aim.2011.03.016},
+  eprint        = {0911.4148},
+  archivePrefix = {arXiv},
+  primaryClass  = {math.CO},
+}
+
+% Proves the relative Alon conjecture for regular base graphs (arXiv March
+% 2014, predating Bordenave's posting), with polynomial outlier rates
+% n^(-eta) for Ramanujan regular bases.
+@misc{FriedmanKohler2014,
+  author        = {Friedman, Joel and Kohler, David-Emmanuel},
+  title         = {The relativized second eigenvalue conjecture of {A}lon},
+  year          = {2014},
+  eprint        = {1403.3462},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.DM},
+  note          = {Reorganized as the series ``On the Relativized Alon Second Eigenvalue Conjecture I--VI'', arXiv:1911.05688, 1911.05705, 1911.05710, 1911.05721, 1911.06620, 1911.05775 (2019)},
+}
+
+@article{Puder2015,
+  author        = {Puder, Doron},
+  title         = {Expansion of random graphs: new proofs, new results},
+  journal       = {Inventiones Mathematicae},
+  volume        = {201},
+  number        = {3},
+  pages         = {845--908},
+  year          = {2015},
+  doi           = {10.1007/s00222-014-0560-x},
+  eprint        = {1212.5216},
+  archivePrefix = {arXiv},
+  primaryClass  = {math.CO},
+}
+
+% Edge rigidity lambda_2 <= 2 sqrt(d-1) + N^(-c) for fixed d >= 3.
+@article{HuangYau2024,
+  author        = {Huang, Jiaoyang and Yau, Horng-Tzer},
+  title         = {Spectrum of random {$d$}-regular graphs up to the edge},
+  journal       = {Communications on Pure and Applied Mathematics},
+  volume        = {77},
+  number        = {3},
+  pages         = {1635--1723},
+  year          = {2024},
+  doi           = {10.1002/cpa.22176},
+  eprint        = {2102.00963},
+  archivePrefix = {arXiv},
+  primaryClass  = {math.PR},
+}
+
+% Tracy-Widom fluctuations for random 2-lifts of dense random regular
+% graphs (their Theorem 7.8), and independent maxima of TW_1 variables for
+% iterated 2-lifts (Corollary 7.9).
+@misc{LiuZou2025,
+  author        = {Liu, Dang-Zheng and Zou, Guangyi},
+  title         = {Edge universality for inhomogeneous random matrices},
+  year          = {2025},
+  eprint        = {2508.17838},
+  archivePrefix = {arXiv},
+  primaryClass  = {math.PR},
+}
+
+% Numerical evidence that the bulk level spacings of generic regular graphs
+% follow GOE statistics; MNS's stated motivation for the beta=1 ansatz.
+@incollection{JakobsonMillerRivinRudnick1999,
+  author        = {Jakobson, Dmitry and Miller, Stephen D. and Rivin, Igor and Rudnick, Ze\'{e}v},
+  title         = {Eigenvalue spacings for regular graphs},
+  booktitle     = {Emerging Applications of Number Theory (Minneapolis, MN, 1996)},
+  series        = {The IMA Volumes in Mathematics and its Applications},
+  volume        = {109},
+  pages         = {317--327},
+  publisher     = {Springer},
+  address       = {New York},
+  year          = {1999},
+  doi           = {10.1007/978-1-4612-1544-8_12},
+}
+
+% Original analysis of the permutation model of random regular graphs.
+@article{Friedman1991,
+  author  = {Friedman, Joel},
+  title   = {On the second eigenvalue and random walks in random $d$-regular graphs},
+  journal = {Combinatorica},
+  volume  = {11},
+  number  = {4},
+  pages   = {331--362},
+  year    = {1991},
+  doi     = {10.1007/BF01275669},
+}
+
+% Localized states and Poisson outlier statistics at the sparse
+% Erdos-Renyi spectral edge: the rigorous precedent for the coexistence of
+% a bulk edge law with localized far outliers.
+@article{AltDucatezKnowles2021,
+  author        = {Alt, Johannes and Ducatez, Rapha\"{e}l and Knowles, Antti},
+  title         = {Extremal eigenvalues of critical {E}rd{\H{o}}s--{R}\'{e}nyi graphs},
+  journal       = {Annals of Probability},
+  volume        = {49},
+  number        = {3},
+  pages         = {1347--1401},
+  year          = {2021},
+  doi           = {10.1214/20-AOP1483},
+  eprint        = {1905.03243},
+  archivePrefix = {arXiv},
+  primaryClass  = {math.PR},
+}
+
+@article{AltDucatezKnowles2023,
+  author        = {Alt, Johannes and Ducatez, Rapha\"{e}l and Knowles, Antti},
+  title         = {Poisson statistics and localization at the spectral edge of sparse {E}rd{\H{o}}s--{R}\'{e}nyi graphs},
+  journal       = {Annals of Probability},
+  volume        = {51},
+  number        = {1},
+  pages         = {277--358},
+  year          = {2023},
+  doi           = {10.1214/22-AOP1596},
+  eprint        = {2106.12519},
+  archivePrefix = {arXiv},
+  primaryClass  = {math.PR},
+}
+
+@article{HiesmayrMcKenzie2025,
+  author        = {Hiesmayr, Ella and McKenzie, Theo},
+  title         = {The spectral edge of constant degree {E}rd{\H{o}}s--{R}\'{e}nyi graphs},
+  journal       = {Random Structures \& Algorithms},
+  volume        = {66},
+  number        = {3},
+  pages         = {e70011},
+  year          = {2025},
+  doi           = {10.1002/rsa.70011},
+  eprint        = {2309.11007},
+  archivePrefix = {arXiv},
+  primaryClass  = {math.PR},
 }
