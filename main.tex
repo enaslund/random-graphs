@@ -85,21 +85,28 @@ is obtained by assigning to each edge of $B$ a permutation in $S_{k}$,
 and the eigenvalues of $H$ split into the \emph{old} eigenvalues,
 which are those of $B$, and the remaining $(k-1)\left|V(B)\right|$
 \emph{new} eigenvalues. Random covers were introduced as a combinatorial
-construction of expanders by Amit and Linial \cite{AmitLinial2002},
+construction of expanders by Amit and Linial \cite{AmitLinial2002,AmitLinial2006}
+(for expanders see the survey \cite{HooryLinialWigderson2006}),
 and the extremal behavior of their new eigenvalues is governed by
 the spectral radius $\rho(B)$ of the universal cover of $B$: Friedman
 \cite{Friedman2003} formulated the relative Alon conjecture, that
 the largest new eigenvalue of a random degree $k$ cover of $B$ is
 at most $\rho(B)+\epsilon$ asymptotically almost surely, successive
-bounds were given by Lubetzky, Sudakov, and Vu \cite{LubetzkySudakovVu2011}
-and by Puder \cite{Puder2015}, and the conjecture was proven for
-regular base graphs by Friedman and Kohler \cite{FriedmanKohler2014}
-and in general by Bordenave \cite{Bordenave2020} (see also \cite{BordenaveCollins2019}).
+bounds were given by Linial and Puder \cite{LinialPuder2010}, by
+Lubetzky, Sudakov, and Vu \cite{LubetzkySudakovVu2011}, and by Puder
+\cite{Puder2015}, and the conjecture was proven for
+regular base graphs by Friedman and Kohler \cite{FriedmanKohler2014,FriedmanKohler2019}
+and in general by Bordenave \cite{Bordenave2020} (see also \cite{BordenaveCollins2019,BordenaveCollins2023}).
+A sharp quantitative form was given recently by Chen, Garza-Vargas,
+Tropp, and van Handel \cite{ChenGarzaVargasTroppVanHandel2026}, and
+we refer to the survey \cite{VanHandel2025} for the strong convergence
+framework behind these results.
 With this in mind, we call a cover $H$ of $B$ \emph{one-sided Ramanujan}
 if every new eigenvalue is at most $\rho(B)$. When $B$ is $d$-regular
 the universal cover is the $d$-regular tree and $\rho(B)=2\sqrt{d-1}$,
 the threshold of the classical Ramanujan property, and no infinite
-family does better, by the Alon-Boppana bound (see Nilli \cite{Nilli1991}).
+family does better, by the Alon-Boppana bound (see Nilli \cite{Nilli1991,Nilli2004}
+and Friedman \cite{Friedman1993}).
 When $B$ is the bouquet of $d/2$ loops on a single vertex, a random
 degree $k$ cover of $B$ is precisely the permutation model of a
 random $d$-regular graph on $k$ vertices, with new eigenvalues its
@@ -107,13 +114,20 @@ non-trivial eigenvalues. Covers also carry the constructive side of
 the Ramanujan story: Lubotzky, Phillips, and Sarnak \cite{LubotzkyPhillipsSarnak1988}
 and independently Margulis \cite{Margulis1988} built infinite Ramanujan
 families when $d-1$ is prime, and whether non-bipartite Ramanujan
-graphs exist for every degree remains open. With covers in hand, Bilu
+graphs exist for every degree remains open, though explicit near Ramanujan
+graphs of every degree and size are known \cite{Alon2021}. With covers in hand, Bilu
 and Linial \cite{BiluLinial2006} conjectured that every $d$-regular
 graph has a $2$-cover whose new eigenvalues all lie in $[-2\sqrt{d-1},2\sqrt{d-1}]$,
 which would settle it. Marcus, Spielman, and Srivastava \cite{MarcusSpielmanSrivastava2015}
 proved the one-sided statement for bipartite graphs, and Hall, Puder,
 and Sawin \cite{HallPuderSawin2018} proved that every connected loopless
-graph has a one-sided Ramanujan cover of every degree.
+graph has a one-sided Ramanujan cover of every degree. For the group
+constrained covers studied below, Chandrasekaran and Velingker \cite{ChandrasekaranVelingker2017}
+constructed shift lifts of degrees three and four preserving the Ramanujan
+property, and Agarwal, Chandrasekaran, Kolla, and Madan \cite{AgarwalChandrasekaranKollaMadan2019}
+bounded the new eigenvalues of random group based lifts, showing in
+particular that abelian lifts of exponentially large degree are never
+close to Ramanujan.
 
 The relative Alon theorem localizes the largest new eigenvalue at
 the threshold but says nothing about which side of it the eigenvalue
@@ -121,8 +135,10 @@ falls on, and the question of this paper is the finer one: how does
 the largest new eigenvalue of a random cover fluctuate around $\rho(B)$,
 and what proportion of random covers is Ramanujan? At the bouquet
 this is a question with history. Alon \cite{Alon1986} conjectured
-that random $d$-regular graphs are nearly Ramanujan, Friedman \cite{Friedman2008}
-proved it, and Sarnak \cite{Sarnak2004} asked whether a positive
+that random $d$-regular graphs are nearly Ramanujan, Friedman, Kahn,
+and Szemer\'{e}di \cite{FriedmanKahnSzemeredi1989,Friedman1991} proved
+the first $O(\sqrt{d})$ bounds, Friedman \cite{Friedman2008} proved
+the conjecture, and Sarnak \cite{Sarnak2004} asked whether a positive
 proportion is Ramanujan outright, reporting early experiments of Novikoff
 already pointing to the Tracy-Widom law. The first systematic numerical
 attack was made in 2008 by Miller, Novikoff, and Sabelli \cite{MillerNovikoffSabelli2008},
@@ -147,7 +163,10 @@ of the Tracy-Widom law to the left of its mean,
 \begin{equation}
 F_{1}(\mu_{TW_{1}})=0.519652\dots,\label{eq:mns_52_percent}
 \end{equation}
-approximately $52\%$.
+approximately $52\%$. From a formal expansion of the graph zeta
+function, Friedman \cite{Friedman2019} later suggested that the limiting
+probability exceeds one half, for random regular graphs and for random
+covers of a regular base alike, without identifying the constant.
 
 We report on a numerical study of the largest new eigenvalue of random
 covers, roughly a thousand times larger than the experiment of MNS,
@@ -211,7 +230,21 @@ cover, a maximum of one GOE block and one GUE block, and of a $\mathbb{Z}_{5}$
 cover, a maximum of two independent GUE blocks, each drift away from
 every Tracy-Widom law while approaching the predicted maximum law,
 which the $\mathbb{Z}_{5}$ family matches to three decimal places
-(see Table \ref{tab:predicted_observed} in section \ref{sec:covers}). Our final conjecture extends the picture to covers
+(see Table \ref{tab:predicted_observed} in section \ref{sec:covers}).
+
+The conjectures have a hyperbolic counterpart. Random degree $k$
+covers of a fixed hyperbolic surface are known to have relative spectral
+gap $\frac{3}{16}-\epsilon$ \cite{MageeNaudPuder2022} and in fact
+$\frac{1}{4}-\epsilon$ \cite{HideMagee2023,MageePuderVanHandel2025},
+the analog of the relative Alon theorem, and for smooth linear spectral
+statistics of Laplacians twisted by a character of the fundamental
+group the fluctuations are those of the GOE when the character is
+real and of the GUE when it is complex \cite{Moy2024,Maoz2026}, the
+same selection by Frobenius-Schur type that Conjecture \ref{conj:symmetry_classes}
+asserts at the edge. No Tracy-Widom law is known or conjectured in
+that setting.
+
+Our final conjecture extends the picture to covers
 of a fixed irregular base graph, where no theorem and, to our knowledge,
 no prior experiment exists. For regular bases, Lubetzky, Sudakov,
 and Vu \cite{LubetzkySudakovVu2011} simulated random covers of three
@@ -271,7 +304,8 @@ concluding that about $69\%$ of such graphs are Ramanujan and correcting
 the prediction (\ref{eq:mns_52_percent}) of MNS: the correct one-sided
 constant is $83\%$, not $52\%$. For fixed degree, where Huang and
 Yau \cite{HuangYau2024} had located $\lambda_{2}$ within $V^{-c}$
-of the threshold, Huang, McKenzie, and Yau \cite{HuangMcKenzieYau2024}
+of the threshold and optimal eigenvalue rigidity was then established
+in \cite{HuangMcKenzieYau2024Rigidity}, Huang, McKenzie, and Yau \cite{HuangMcKenzieYau2024}
 proved the definitive result.
 \begin{thm}
 \label{thm:hmy}Let $d\geq3$ be fixed, let $G$ be a uniformly random
@@ -381,7 +415,8 @@ A_{H}\cong\bigoplus_{\rho\in\mathrm{Irr}(\Gamma)}A_{\rho}^{\oplus d_{\rho}},\ \ 
 where the sum runs over the oriented edges of $B$, $E_{uv}$ is the
 matrix unit, and $d_{\rho}$ is the dimension of $\rho$, so that
 $A_{\rho}$ is an $nd_{\rho}$ dimensional Hermitian matrix (see \cite[Section 2]{HallPuderSawin2018}
-for this decomposition). The trivial representation recovers the base,
+for this decomposition, and \cite{AgarwalChandrasekaranKollaMadan2019}
+for its use on group based lifts). The trivial representation recovers the base,
 $A_{1}=A_{B}$, and so the new spectrum of $H$ is the union of the
 spectra of the non-trivial blocks $A_{\rho}$, each with multiplicity
 $d_{\rho}$. Note that the blocks of complex conjugate representations
@@ -697,7 +732,14 @@ and \ref{sec:irregular}).}
 \subsection{\label{subsec:approach}The Approach to the Limit}
 
 The theorems give no rate of convergence, and the data is precise
-enough to measure one. Write $F_{V}$ for the distribution function
+enough to measure one. Rates at the Tracy-Widom edge have a history
+in random matrix theory: Choup \cite{Choup2009} computed the Edgeworth
+expansion of the largest eigenvalue law of the finite GOE, Johnstone
+and Ma \cite{JohnstoneMa2012} proved that the rate of approach depends
+on the centering convention, and rates of order $N^{-1/3}$ are proven
+for Wigner matrices \cite{SchnelliXu2022} and sparse Erd\H{o}s-R\'{e}nyi
+graphs \cite{BuchtSchnelliXu2025}. For random regular graphs no rate
+is proven. Write $F_{V}$ for the distribution function
 of the standardized largest non-trivial eigenvalue and $\widetilde{F}_{1},\widetilde{f}_{1}$
 for the standardized Tracy-Widom distribution and density. Across
 the simple $4$-regular family the deviation $F_{V}-\widetilde{F}_{1}$
@@ -1104,7 +1146,16 @@ at the spectral radius $\rho(B)$ of the universal cover, an algebraic
 number lying between $2\sqrt{\delta-1}$ and $2\sqrt{\Delta-1}$, where
 $\delta$ and $\Delta$ are the minimum and maximum degrees of $B$, with $TW_{1}$
 fluctuations at scale $k^{-2/3}$ and limiting Ramanujan probability
-$F_{1}(0)$, universally in the base graph.
+$F_{1}(0)$, universally in the base graph. The threshold $\rho(B)$
+is also the benchmark of the $X$-Ramanujan property of Mohanty and
+O'Donnell \cite{MohantyODonnell2020}, who construct infinite families
+of finite graphs whose second eigenvalue is at most the spectral radius
+of a fixed infinite cover. It is the right benchmark: by the generalized
+Alon-Boppana theorems of Friedman and Tillich \cite{FriedmanTillich2005},
+no infinite family of graphs sharing the universal cover of $B$ has
+second eigenvalue asymptotically below $\rho(B)$, and Hoory \cite{Hoory2005}
+bounds $\rho(B)$ itself below by $2\sqrt{\bar{d}-1}$, where $\bar{d}$
+is the average degree of $B$.
 
 The main base is $K_{5}-e$, the complete graph on five vertices minus
 an edge, one of the smallest irregular base graphs of minimum degree
@@ -1125,9 +1176,9 @@ giving
 which we re-derived and verified independently. Note the contrast
 with the regular case, where $\rho=2\sqrt{d-1}$: for a general base
 even the centering of the conjectured law is a non-trivial algebraic
-quantity (see \cite{AngelFriedmanHoory2015,McKay2023} on computing
-$\rho$, and \cite{CrawfordMarchetteMaxwellMendelson2023} for related
-spectral experiments on structured random graphs).
+quantity (see \cite{AngelFriedmanHoory2015,GarzaVargasKulkarni2023,McKay2023}
+on computing $\rho$, and \cite{CrawfordMarchetteMaxwellMendelson2023}
+for related spectral experiments on structured random graphs).
 
 \subsection{\label{subsec:bulk_law}The Bulk Law}
 
@@ -1279,7 +1330,8 @@ y_{u\rightarrow v}=\left(\lambda-\sum_{w\sim v,\ w\neq u}y_{v\rightarrow w}\righ
 over the directed edges of $B$, which exists for $\lambda>\rho(B)$:
 each attached branch contributes its value to the diagonal, and $\lambda_{B}(H)$
 is the largest $\lambda$ with $\lambda_{\max}\left(A_{H}+D(\lambda)\right)=\lambda$,
-where $D(\lambda)$ is the diagonal matrix of attached branch values.
+where $D(\lambda)$ is the diagonal matrix of attached branch values
+(for eigenvalues of graphs with attached infinite tails see also \cite{Golinskii2016}).
 Two elementary facts organize the far tails: copies of $H$
 appear in a random cover at a polynomial rate governed by the cycle
 rank, and any copy forces a new eigenvalue near $\lambda_{B}(H)$.
@@ -1411,10 +1463,17 @@ and where the probability is smaller than every power of $k$ when
 no such $H$ exists.
 \end{conjecture}
 For regular Ramanujan bases, Conjecture \ref{conj:defect_completeness}
-is essentially the theorem of Friedman and Kohler \cite{FriedmanKohler2014},
+is essentially the theorem of Friedman and Kohler \cite{FriedmanKohler2014,FriedmanKohler2019},
 and the coexistence of a Tracy-Widom bulk with a thin family of localized
 outliers is the picture proven at the sparse Erd\H{o}s-R\'{e}nyi
-edge \cite{AltDucatezKnowles2021,AltDucatezKnowles2023,HiesmayrMcKenzie2025}.
+edge \cite{AltDucatezKnowles2021,AltDucatezKnowles2023,AltDucatezKnowles2024,HiesmayrMcKenzie2025},
+and for sparse Wigner matrices the outliers are likewise produced
+by localized defects \cite{TikhomirovYoussef2021}. The mechanism is
+not tied to randomness: Alon, Ganguly, and Srivastava \cite{AlonGangulySrivastava2021}
+construct regular graphs of high girth whose top eigenvectors are
+fully localized on small vertex sets, and Alon and Wei \cite{AlonWei2023}
+prove that every value in $[2\sqrt{d-1},d]$ is a limit point of second
+eigenvalues of $d$-regular graphs.
 Proposition \ref{prop:defect_eigenvalue} is the elementary half in
 general. Together with the fluctuation conjecture, the defect picture
 determines exactly which statistics converge.
@@ -1681,7 +1740,7 @@ plus an independent point process of outliers?
 \label{prob:outlier_rate}Prove the upper bound in Conjecture \ref{conj:defect_completeness}:
 that nothing but the defects of section \ref{subsec:defects} inhabits
 the polynomial tail. The lower bound is Proposition \ref{prop:defect_eigenvalue},
-the regular Ramanujan case is the theorem of Friedman and Kohler \cite{FriedmanKohler2014},
+the regular Ramanujan case is the theorem of Friedman and Kohler \cite{FriedmanKohler2014,FriedmanKohler2019},
 and the fitted exponents of sections \ref{subsec:defects} and \ref{subsec:k4e}
 match the conjectured rates on two irregular bases with different
 leading ranks.
