@@ -16,7 +16,7 @@ from scipy import stats as sps
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from dataset_utils import (  # noqa: E402
-    REPO_ROOT, RHO_K5_MINUS_E, TW1_MEAN_OVER_STD,
+    REPO_ROOT, RHO_K4_MINUS_E, RHO_K5_MINUS_E, TW1_MEAN_OVER_STD,
     discover_datasets, load_eigenvalues, tw_cdf_standardized,
     tw_mass_left_of_mean,
 )
@@ -107,8 +107,8 @@ def write_markdown(rows):
         "",
         "One row per `.npy` file in `data/` (full precision in"
         " `data_summary.csv`). `gap` = ρ − mean, where ρ is the family's"
-        " Ramanujan threshold: 2√3 for every 4-regular family and"
-        f" ρ(K₅−e) = {RHO_K5_MINUS_E:.9f} for the K₅−e covers; for the"
+        " Ramanujan threshold: 2√3 for every 4-regular family,"
+        f" ρ(K₅−e) = {RHO_K5_MINUS_E:.9f} for the K₅−e covers, and ρ(K₄−e) = √(1+2√7) = 2.508286790 for the K₄−e covers; for the"
         " plain 4-regular families `gap_over_std` should converge to"
         " |TW1 mean|/TW1 std = "
         f"{TW1_MEAN_OVER_STD:.9f} (multi-sheeted cover families, whose"

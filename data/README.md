@@ -77,3 +77,14 @@ covers:
 ```irreg_covers_k5_minus_edge_cover_V{deg_cover}x{base_size}_N{Number}```
 The Ramanujan threshold for the new eigenvalues of this family is the spectral radius of the
 universal cover of K5 - e, which is 3.26287646593635862827..., not 2*sqrt(3).
+
+## 7. K4 minus an edge (k4_minus_edge)
+This folder contains the largest positive new eigenvalue of random covers of the fixed base graph
+K4 minus one edge (degrees 2, 3, 3, 2; spectrum {(1 + sqrt(17))/2, 0, -1, (1 - sqrt(17))/2}),
+calculated to machine precision, with the same S_k voltage model and filename convention as the
+other fixed-base families:
+```
+k4_minus_edge_cover_V{deg_cover}x{base_size}_N{Number}
+```
+The Ramanujan threshold for the new eigenvalues of this family is the spectral radius of the
+universal cover of K4 - e, which is exactly sqrt(1 + 2*sqrt(7)) = 2.5082867902...

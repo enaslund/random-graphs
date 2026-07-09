@@ -1,4 +1,5 @@
 %% LyX 2.3 created this file.  For more info, see http://www.lyx.org/.
+\pdfoutput=1
 \documentclass[12pt,oneside,english]{amsart}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -17,6 +18,10 @@
 \theoremstyle{plain}
 \newtheorem{thm}{\protect\theoremname}
 \theoremstyle{plain}
+\newtheorem{prop}[thm]{\protect\propositionname}
+\theoremstyle{plain}
+\newtheorem{cor}[thm]{\protect\corollaryname}
+\theoremstyle{plain}
 \newtheorem{conjecture}[thm]{\protect\conjecturename}
 \theoremstyle{definition}
 \newtheorem{problem}[thm]{\protect\problemname}
@@ -26,6 +31,8 @@
 
 \usepackage{babel}
 \providecommand{\conjecturename}{Conjecture}
+\providecommand{\corollaryname}{Corollary}
+\providecommand{\propositionname}{Proposition}
 \providecommand{\problemname}{Problem}
 \providecommand{\remarkname}{Remark}
 \providecommand{\theoremname}{Theorem}
@@ -36,32 +43,36 @@
 of Graphs}
 \author{Eric Naslund}
 \email{naslund.math@gmail.com}
+\subjclass[2020]{Primary 05C80; Secondary 60B20, 05C50}
+\keywords{random covers, random lifts, Ramanujan graphs, Tracy-Widom distribution}
 
 \begin{abstract}
 For a connected base graph $B$, the eigenvalues of a random degree
 $k$ cover of $B$ split into those of $B$ and $(k-1)\left|V(B)\right|$
 new eigenvalues, and the cover is \emph{one-sided Ramanujan} if every
 new eigenvalue is at most the spectral radius $\rho(B)$ of the universal
-cover of $B$. Analyzing $1.3\times10^{8}$ samples of the largest
-new eigenvalue across nine families of random covers, we conjecture
+cover of $B$. Analyzing $1.4\times10^{8}$ samples of the largest
+new eigenvalue across ten families of random covers, we conjecture
 that its fluctuations follow the Tracy-Widom law of symmetry class
 $\beta\in\{1,2,4\}$ selected by the Frobenius-Schur type of the associated
-irreducible representation of the covering group, with centering at
-$\rho(B)$, and that the limiting probability that a random cover
-is Ramanujan is
+irreducible representation of the covering group, with centering
+at $\rho(B)$, an algebraic number for irregular bases, and that the
+limiting probability that a random cover is Ramanujan is
 \[
 \prod_{[\rho]\neq1}F_{\beta(\rho)}(0),
 \]
 a product over the non-trivial representations up to conjugation,
-where $F_{\beta}$ is the Tracy-Widom distribution function in its
-original normalization, which the data verifies to three decimal places
-family by family. The simplest case, covers of a bouquet of loops,
-is the random $d$-regular graph: there the limit is $F_{1}(0)=0.8319081\dots$,
+which the data approaches family by family, to three decimal places
+where convergence is complete, and where $F_{\beta}$ is the Tracy-Widom
+distribution function in its original normalization.
+The far tails of every family are localized eigenvalues of polynomially
+rare defect subgraphs, whose values and rates we compute, prove attainable,
+and match to the data. The simplest case, covers of a bouquet of loops,
+is the random $d$-regular graph, where the limit $F_{1}(0)=0.8319081\dots$,
 not the approximately $52\%$ conjectured by Miller, Novikoff, and
-Sabelli \cite{MillerNovikoffSabelli2008}, a statement since proven
-by Huang, McKenzie, and Yau, and the agreement of our regular graph
-data with the proven law validates the pipeline carrying the cover
-results.
+Sabelli \cite{MillerNovikoffSabelli2008}, has since been proven by
+Huang, McKenzie, and Yau. The agreement of our regular graph data
+with the proven law validates the pipeline carrying the cover results.
 \end{abstract}
 
 \date{\today}
@@ -84,7 +95,7 @@ bounds were given by Lubetzky, Sudakov, and Vu \cite{LubetzkySudakovVu2011}
 and by Puder \cite{Puder2015}, and the conjecture was proven for
 regular base graphs by Friedman and Kohler \cite{FriedmanKohler2014}
 and in general by Bordenave \cite{Bordenave2020} (see also \cite{BordenaveCollins2019}).
-Accordingly, we call a cover $H$ of $B$ \emph{one-sided Ramanujan}
+With this in mind, we call a cover $H$ of $B$ \emph{one-sided Ramanujan}
 if every new eigenvalue is at most $\rho(B)$. When $B$ is $d$-regular
 the universal cover is the $d$-regular tree and $\rho(B)=2\sqrt{d-1}$,
 the threshold of the classical Ramanujan property, and no infinite
@@ -95,8 +106,8 @@ random $d$-regular graph on $k$ vertices, with new eigenvalues its
 non-trivial eigenvalues. Covers also carry the constructive side of
 the Ramanujan story: Lubotzky, Phillips, and Sarnak \cite{LubotzkyPhillipsSarnak1988}
 and independently Margulis \cite{Margulis1988} built infinite Ramanujan
-families when $d-1$ is prime, whether non-bipartite Ramanujan graphs
-exist for every degree remains open, and with covers in hand, Bilu
+families when $d-1$ is prime, and whether non-bipartite Ramanujan
+graphs exist for every degree remains open. With covers in hand, Bilu
 and Linial \cite{BiluLinial2006} conjectured that every $d$-regular
 graph has a $2$-cover whose new eigenvalues all lie in $[-2\sqrt{d-1},2\sqrt{d-1}]$,
 which would settle it. Marcus, Spielman, and Srivastava \cite{MarcusSpielmanSrivastava2015}
@@ -113,7 +124,7 @@ this is a question with history. Alon \cite{Alon1986} conjectured
 that random $d$-regular graphs are nearly Ramanujan, Friedman \cite{Friedman2008}
 proved it, and Sarnak \cite{Sarnak2004} asked whether a positive
 proportion is Ramanujan outright, reporting early experiments of Novikoff
-already pointing to the Tracy-Widom law. The first serious numerical
+already pointing to the Tracy-Widom law. The first systematic numerical
 attack was made in 2008 by Miller, Novikoff, and Sabelli \cite{MillerNovikoffSabelli2008},
 hereafter MNS. Writing $d=\lambda_{1}\geq\lambda_{2}\geq\cdots\geq\lambda_{V}$
 for the adjacency eigenvalues of a $d$-regular graph on $V$ vertices,
@@ -129,7 +140,7 @@ $\lambda_{2}$ over graphs of size $V$, they fitted power laws
 \[
 2\sqrt{d-1}-\mu_{V}\sim c_{\mu}V^{m},\ \ \ \sigma_{V}\sim c_{\sigma}V^{s},
 \]
-found best fit exponents $m$ between $-0.79$ and $-0.83$ against
+found best fit exponents $m$ between $-0.72$ and $-0.83$ against
 $s$ between $-0.71$ and $-0.73$, and were led to conjecture that
 the limiting probability of being one-sided Ramanujan is the mass
 of the Tracy-Widom law to the left of its mean,
@@ -198,9 +209,9 @@ When the blocks mix classes no single Tracy-Widom law can appear,
 and the data confirms this too: the largest new eigenvalue of a $\mathbb{Z}_{4}$
 cover, a maximum of one GOE block and one GUE block, and of a $\mathbb{Z}_{5}$
 cover, a maximum of two independent GUE blocks, each drift away from
-every Tracy-Widom law, while matching the predicted maximum law to
-three decimal places (see Table \ref{tab:predicted_observed} in section
-\ref{sec:covers}). Our final conjecture extends the picture to covers
+every Tracy-Widom law while approaching the predicted maximum law,
+which the $\mathbb{Z}_{5}$ family matches to three decimal places
+(see Table \ref{tab:predicted_observed} in section \ref{sec:covers}). Our final conjecture extends the picture to covers
 of a fixed irregular base graph, where no theorem and, to our knowledge,
 no prior experiment exists. For regular bases, Lubetzky, Sudakov,
 and Vu \cite{LubetzkySudakovVu2011} simulated random covers of three
@@ -210,13 +221,13 @@ the following conjecture identifies their constant, universally in
 the base graph.
 \begin{conjecture}
 \label{conj:irregular_base}Let $B$ be a fixed connected base graph
-of minimum degree at least $3$, let $\rho(B)$ denote the spectral radius of
+of cycle rank $e(B)-v(B)+1$ at least two, let $\rho(B)$ denote the spectral radius of
 its universal cover, and let $H_{k}$ be a uniformly random degree
 $k$ cover of $B$. Then there is a constant $c_{B}>0$ such that
 \[
-\frac{\lambda_{new}(H_{k})-\rho(B)}{c_{B}\,k^{-2/3}}\rightarrow TW_{1}
+\frac{\lambda_{\mathrm{new}}(H_{k})-\rho(B)}{c_{B}\,k^{-2/3}}\rightarrow TW_{1}
 \]
-in distribution as $k\rightarrow\infty$, where $\lambda_{new}$ is
+in distribution as $k\rightarrow\infty$, where $\lambda_{\mathrm{new}}$ is
 the largest new eigenvalue. In particular
 \[
 \lim_{k\rightarrow\infty}P\left(H_{k}\text{ is one-sided Ramanujan}\right)=F_{1}(0)=0.8319081\dots
@@ -225,16 +236,30 @@ for every such base graph $B$.
 \end{conjecture}
 The $\beta=1$ law in Conjecture \ref{conj:irregular_base} is forced
 by the picture above, since the standard representation of $S_{k}$
-is real for every $k$. Taking $B$ to be the bouquet of two loops
+is real for every $k$. The hypothesis excludes only the degenerate
+bases: covers of a tree are disjoint copies of it and covers of a
+cycle are unions of longer cycles, so neither has a fluctuation theory,
+while vertices of degree two are harmless, since covers of a subdivision
+are subdivisions of covers. Taking $B$ to be the bouquet of two loops
 recovers the permutation model of random $4$-regular graphs, where
 the conjecture is now a theorem (Theorem \ref{thm:hmy} below), and
 so Conjecture \ref{conj:irregular_base} is the common generalization
 of the proven regular case to arbitrary base graphs.
-Both cases are tested in section \ref{sec:irregular} at five million
+We test both cases in section \ref{sec:irregular} at five million
 covers per size of the fixed bases $K_{5}$ and $K_{5}-e$: each family
 selects the $TW_{1}$ law, and the empirical Ramanujan probabilities
 at $V=10{,}000$ are $0.83281$ and $0.82916$ against the conjectured
-$F_{1}(0)=0.8319081\dots$.
+$F_{1}(0)=0.8319081\dots$. A third fixed base, $K_{4}-e$, tests the
+conjecture at its boundary, cycle rank exactly two, where the defect
+structure of the far tail changes and the convergence is slowest.
+The far tails themselves are not noise: they are localized eigenvalues
+of polynomially rare defect subgraphs, computable exactly from the
+universal cover, and in section \ref{sec:irregular} we prove that
+every such defect occurs, and produces its eigenvalue, at the polynomial
+rate governed by its cycle rank (Propositions \ref{prop:defect_counting}
+and \ref{prop:defect_eigenvalue}), conjecture that the defects account
+for the entire tail, and verify the predicted values and rates in
+the data.
 
 At the bouquet, the conjectures above meet proven ground. For degrees
 growing with the number of vertices, Bauerschmidt, Huang, Knowles,
@@ -284,7 +309,7 @@ data reported here was generated by 2023, before the appearance of
 \cite{HuangMcKenzieYau2024}, with every family but the two fixed base
 ones predating \cite{HuangYau2023} as well, and so the pipeline was
 in no way tuned to the theorems it now confirms. The value of section
-\ref{sec:regular} accordingly lies in what the theorems do not address,
+\ref{sec:regular} then lies in what the theorems do not address,
 namely the finite size behavior, the diagnosis of MNS's $52\%$, and
 the failure of the multigraph model, while the cover families of sections
 \ref{sec:covers} and \ref{sec:irregular} are the substance of the
@@ -293,7 +318,7 @@ paper.
 We stress three differences between our experiment and that of MNS.
 First, scale: we use $5\times10^{6}$ samples per size against their
 $1000$, sizes up to $V=500{,}000$ against their $20{,}000$, and
-$1.3\times10^{8}$ samples in total, so that the four candidate laws,
+$1.4\times10^{8}$ samples in total, so that the four candidate laws,
 whose distribution functions differ only in the third decimal, are
 separated by dozens of binomial standard errors rather than fractions
 of one. Second, methodology: instead of fitting a single power law
@@ -322,9 +347,10 @@ of the permutation multigraph model. Section \ref{sec:covers} presents
 the evidence for Conjectures \ref{conj:symmetry_classes} and \ref{conj:ramanujan_probabilities}
 across abelian and quaternion covers, together with a quantitative
 account of the mixed class families. Section \ref{sec:irregular}
-presents Conjecture \ref{conj:irregular_base} and the first data
-for covers of $K_{5}$ minus an edge. Section \ref{sec:open_problems}
-collects open problems.
+presents Conjecture \ref{conj:irregular_base}, the data for the three
+fixed base families, and the defect analysis of the far tails, including
+the two propositions and the completeness conjecture that organize
+them. Section \ref{sec:open_problems} collects open problems.
 
 \section{\label{sec:model}The Numerical Model and the Dataset}
 
@@ -342,7 +368,7 @@ of order $k$, a random $\Gamma$-cover assigns independent uniform
 elements of $\Gamma$ to the edges, acting on the fiber $\Gamma$
 by right multiplication. The eigenvalues of $B$ lift to $H$, and
 are called the old eigenvalues, and the remaining $n(k-1)$ eigenvalues
-are called \emph{new}, and we write $\lambda_{new}(H)$ for the largest
+are called \emph{new}, and we write $\lambda_{\mathrm{new}}(H)$ for the largest
 new eigenvalue.
 
 The spectrum of a $\Gamma$-cover organizes along the irreducible
@@ -414,19 +440,20 @@ real form of the quaternionic block of a random $Q_{8}$-cover directly,
 a $4n$ dimensional matrix all of whose eigenvalues are new, with
 each eigenvalue doubled by the quaternionic structure. These five
 families, together with the permutation covers of the bouquet (random
-$4$-regular graphs), of $K_{5}$, and of $K_{5}$ minus an edge, are the subject
+$4$-regular graphs), of $K_{5}$, of $K_{5}$ minus an edge, and of $K_{4}$
+minus an edge, are the subject
 of sections \ref{sec:regular} through \ref{sec:irregular}.
 
 \subsection{\label{subsec:statistics}The Statistics and the Tracy-Widom Constants}
 
 By $TW_{\beta}$ we mean the Tracy-Widom law in the original normalization
 of Tracy and Widom \cite{TracyWidom1994,TracyWidom1996}, with distribution
-function $F_{\beta}$, mean $\mu_{\beta}$, and standard deviation
-$\sigma_{\beta}$, and by $\widetilde{TW}_{\beta}$ the standardization
+function $F_{\beta}$, mean $\mu_{TW_{\beta}}$, and standard deviation
+$\sigma_{TW_{\beta}}$, and by $\widetilde{TW}_{\beta}$ the standardization
 to mean $0$ and variance $1$. The constants we use are
 \begin{equation}
 \begin{array}{ccccc}
-\beta & \mu_{\beta} & \sigma_{\beta} & \left|\mu_{\beta}\right|/\sigma_{\beta} & F_{\beta}(\mu_{\beta})\\
+\beta & \mu_{TW_{\beta}} & \sigma_{TW_{\beta}} & \left|\mu_{TW_{\beta}}\right|/\sigma_{TW_{\beta}} & F_{\beta}(\mu_{TW_{\beta}})\\
 1 & -1.2065335746 & 1.2679830577 & 0.9515376 & 0.519652\\
 2 & -1.7710868074 & 0.9017731382 & 1.9640048 & 0.515016\\
 4 & -2.3068848932 & 0.7195302084 & 3.2060987 & 0.511069
@@ -449,9 +476,10 @@ the third decimal, and with $10^{6}$ to $5\times10^{6}$ samples
 the binomial standard error is between $2\times10^{-4}$ and $5\times10^{-4}$, separating
 the four candidates by tens of standard errors.
 
-The relevance of the ratio $\left(2\sqrt{d-1}-\mu_{V}\right)/\sigma_{V}$
-is the following elementary observation of MNS. Writing $g_{V}$ for
-this ratio, the probability of being one-sided Ramanujan is
+The relevance of the ratio $g_{V}=\left(\rho-\mu_{V}\right)/\sigma_{V}$
+of the mean gap to the standard deviation, with $\rho$ the family's
+threshold, is the following elementary observation of MNS. For a $d$-regular
+family, the probability of being one-sided Ramanujan is
 \[
 P\left(\lambda\leq2\sqrt{d-1}\right)=P\left(\frac{\lambda-\mu_{V}}{\sigma_{V}}\leq g_{V}\right),
 \]
@@ -472,7 +500,7 @@ shows and what Theorem \ref{thm:hmy} now proves.
 
 \subsection{\label{subsec:dataset}The Dataset and the Pipeline}
 
-The dataset consists of $1.3\times10^{8}$ samples across nine series,
+The dataset consists of $1.4\times10^{8}$ samples across ten series,
 each sample the largest new eigenvalue of one independently generated
 graph or cover, all with base degree $d=4$.
 
@@ -496,6 +524,8 @@ covers of $K_{5}$ & $100\leq V\leq10{,}000$ ($7$) & $5{,}000{,}000$ & fixed base
 \hline
 covers of $K_{5}-e$ & $100\leq V\leq10{,}000$ ($7$) & $5{,}000{,}000$ & fixed irregular base\tabularnewline
 \hline
+covers of $K_{4}-e$ & $100\leq V\leq10{,}000$ ($7$) & $1{,}000{,}000$ & fixed base of cycle rank two\tabularnewline
+\hline
 \end{tabular}}
 \par\end{center}
 
@@ -514,25 +544,28 @@ edges, with a loop contributing $2$ to the diagonal. The abelian
 series draw a fresh random simple $4$-regular base graph on $n$
 vertices for each batch, assign each base edge an independent uniform
 voltage in $\mathbb{Z}_{k}$, and record the largest new eigenvalue
-of the explicit $kn$-vertex cover, ten covers per base graph. A one-way
+of the explicit $kn$-vertex cover, ten covers per base graph. A one way
 analysis of variance across the ten covers sharing a base gives intraclass
 correlations below $3\times10^{-4}$ in absolute value at the largest
-sizes, and below $2.4\times10^{-3}$ at the smallest, and so the residual randomness of the
+size, and below $2.4\times10^{-3}$ at every size, and so the residual randomness of the
 base is invisible at the fluctuation scale and the samples may be
 treated as independent. The quaternion series assigns each edge of
 a random simple $4$-regular base an independent uniform element of
 $Q_{8}$ and records the top eigenvalue of the resulting $4n$ dimensional
-real block. The two fixed base series assign each edge of $K_{5}$,
-respectively of $K_{5}$ minus an edge, an independent uniform permutation
-in $S_{k}$, and record the largest new eigenvalue of the cover on
-$5k$ vertices, with the five lifted base eigenvalues removed exactly.
-Both families are analyzed in section \ref{sec:irregular}.
+real block. The fixed base series assign each edge of $K_{5}$, of
+$K_{5}$ minus an edge, and of $K_{4}$ minus an edge an independent
+uniform permutation in $S_{k}$, and record the largest new eigenvalue
+of the cover, with the lifted base eigenvalues removed exactly. These
+families are analyzed in section \ref{sec:irregular}.
 
-Eigenvalues are computed with the implicitly restarted Lanczos method
+We compute eigenvalues with the implicitly restarted Lanczos method
 (ARPACK), applied to the adjacency matrix shifted by a small multiple
 of the identity so that the algebraically largest eigenvalues dominate
-in magnitude. Old eigenvalues are removed by comparing against the
-base spectrum, computed exactly, with a tolerance of $10^{-10}$.
+in magnitude. We remove old eigenvalues by comparing against the
+base spectrum, computed exactly, with a tolerance of $10^{-10}$. Removal
+by value also discards the duplicated base spectrum of the rare disconnected
+cover, and so the cover families are conditioned on connectedness,
+like the simple family (see section \ref{subsec:defects}).
 For the regular families this removes the trivial eigenvalue $d$
 and yields $\lambda_{2}$. The number of computed eigenvalues per
 graph starts at $2$ and grows automatically whenever every computed
@@ -548,17 +581,17 @@ samples at the smallest sizes is smaller than the nominal $10^{6}$.
 Duplicated batches agree to better than $3\times10^{-13}$, and dropping
 them moves every statistic quoted in this paper by at most two units
 in its final displayed digit, consistent with the sampling fluctuation
-of the removed samples. All summary statistics were verified
-by independent recomputation from the raw samples.
+of the removed samples. We verified every summary statistic
+by independent recomputation from the raw samples. The complete dataset,
+the generation code, and the analysis pipeline that produces every
+figure and table of this paper are available at \url{https://github.com/enaslund/random-graphs}.
 
 \section{\label{sec:regular}The Regular Graph Control Experiment}
 
 In this section we test the pipeline against Theorem \ref{thm:hmy}
 along the two simple $4$-regular series, diagnose the finite size
 artifact behind MNS's $52\%$, and isolate a model, the permutation
-multigraph, which falls outside the universality class. Since the
-data predates \cite{HuangYau2023,HuangMcKenzieYau2024}, none of what
-follows was tuned to the answers.
+multigraph, which falls outside the universality class.
 
 \subsection{Convergence to the Proven Law}
 
@@ -573,9 +606,9 @@ the sampling floor, reaching $8.7\times10^{-4}$ at $V=20{,}000$
 (the floor at $5\times10^{6}$ samples is roughly $4\times10^{-4}$),
 while the distances to $\widetilde{TW}_{2}$, $\widetilde{TW}_{4}$,
 and the normal stall at $3.9\times10^{-3}$, $7.8\times10^{-3}$,
-and $1.9\times10^{-2}$ respectively. At the legacy sizes the fit is
-statistically exact: at $V=500{,}000$ the Kolmogorov-Smirnov test
-accepts $\widetilde{TW}_{1}$ with $p=0.99$. The mass to the left of the
+and $1.9\times10^{-2}$ respectively. At the legacy sizes the sample
+is statistically indistinguishable from the law: at $V=500{,}000$
+the Kolmogorov-Smirnov test accepts $\widetilde{TW}_{1}$ with $p=0.99$. The mass to the left of the
 mean, MNS's decisive statistic, reaches $0.51885$ at $V=20{,}000$
 and $0.52011$ at $V=500{,}000$ against the $TW_{1}$ value $0.519652$
 from (\ref{eq:tw_constants}), with the competing values $0.515016$,
@@ -587,7 +620,7 @@ and $0.165$ (Figure \ref{fig:moments}, also in section \ref{sec:covers}).
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.75\columnwidth]{images/pdf_vs_tracywidom_simple_V20000_N5000000.png}
+\includegraphics[width=0.75\columnwidth]{images/pdf_vs_tracywidom_simple_V20000_N5000000.pdf}
 \par\end{centering}
 \caption{\label{fig:pdf_simple}Standardized empirical density of the largest
 non-trivial eigenvalue over $5\times10^{6}$ random simple $4$-regular
@@ -597,7 +630,7 @@ $\beta=1,2,4$ densities and the standard normal.}
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.6\columnwidth]{images/qq_vs_tracywidom1_matlab_simple_V500000_N100000.png}
+\includegraphics[width=0.6\columnwidth]{images/qq_vs_tracywidom1_matlab_simple_V500000_N100000.pdf}
 \par\end{centering}
 \caption{\label{fig:qq_matlab}Quantile-quantile plot of $10^{5}$ samples
 at $V=500{,}000$ against $\widetilde{TW}_{1}$, probability range
@@ -606,7 +639,7 @@ $10^{-4}$ to $0.999$.}
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.75\columnwidth]{images/ks_statistic_vs_size_simple_regular.png}
+\includegraphics[width=0.75\columnwidth]{images/ks_statistic_vs_size_simple_regular.pdf}
 \par\end{centering}
 \caption{\label{fig:ks_simple}Kolmogorov-Smirnov distance of the standardized
 samples to the standardized Tracy-Widom $\beta=1,2,4$ laws and the
@@ -616,7 +649,7 @@ samples). Only the distance to $\beta=1$ keeps falling.}
 \end{figure}
 
 The scaling constants of (\ref{eq:hmy_constants}) are confirmed as
-well. For $d=4$ we have that $c(4)=3^{-1/6}=0.8326832\dots$, and
+well. For $d=4$ we have that $c(4)=3^{-1/6}=0.8326831\dots$, and
 so the conjectured, now proven, amplitudes are
 \begin{equation}
 2\sqrt{3}-\mu_{V}\approx1.0046602\,V^{-2/3},\ \ \ \sigma_{V}\approx1.0558282\,V^{-2/3}.\label{eq:d4_amplitudes}
@@ -639,7 +672,7 @@ the rigorous source for (\ref{eq:hmy_constants}).
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.8\columnwidth]{images/scaling_loglog_regular_graphs.png}
+\includegraphics[width=0.8\columnwidth]{images/scaling_loglog_regular_graphs.pdf}
 \par\end{centering}
 \caption{\label{fig:scaling_regular}Mean gap $2\sqrt{3}-\mu_{V}$ and standard
 deviation against $V$ for the three $4$-regular series, with fitted
@@ -648,7 +681,7 @@ slopes and the $V^{-2/3}$ Tracy-Widom line.}
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.8\columnwidth]{images/compensated_scaling_all_families.png}
+\includegraphics[width=0.8\columnwidth]{images/compensated_scaling_all_families.pdf}
 \par\end{centering}
 \caption{\label{fig:compensated}Compensated scaling: $\left(\rho-\mu_{V}\right)V^{2/3}$
 and $\sigma_{V}V^{2/3}$ against $V$ for all families, where $\rho$
@@ -670,8 +703,9 @@ for the standardized Tracy-Widom distribution and density. Across
 the simple $4$-regular family the deviation $F_{V}-\widetilde{F}_{1}$
 is, to within $6$ to $14$ percent of its squared norm, proportional
 to the single fixed profile $\left(t^{2}-1\right)\widetilde{f}_{1}(t)$,
-the signature of a skewness deficit, and so to the resolution of $5\times10^{6}$
-samples the finite size law is the one parameter family
+a correction of Edgeworth type signaling a skewness deficit, and so
+to the resolution of $5\times10^{6}$ samples the finite size law is
+the one parameter family
 \[
 F_{V}(t)\approx\widetilde{F}_{1}(t)-\hat{c}(V)\left(t^{2}-1\right)\widetilde{f}_{1}(t),
 \]
@@ -682,12 +716,12 @@ The same parameter accounts for the residuals of the individual statistics:
 the mass left of the mean at $V=20{,}000$ still sits $-8.0\times10^{-4}$
 from the $TW_{1}$ value, $3.6$ binomial standard errors, against
 an Edgeworth prediction of $-\hat{c}\,\widetilde{f}_{1}(0)=-5.3\times10^{-4}$,
-and after subtracting the fitted profile the left tail of every $5\times10^{6}$
-sample dataset agrees with $\widetilde{TW}_{1}$ to within two standard
+and after subtracting the fitted profile the left tails of the largest
+datasets agree with $\widetilde{TW}_{1}$ to within three standard
 errors down to probability $6\times10^{-7}$. The corrections to the
-amplitudes decay faster: fitting $A+BV^{-\beta}$ to the compensated
-standard deviation of the simple family gives $A=1.0548$ with $\beta=0.63$
-freely fitted and $A=1.0562$ with $\beta$ fixed at $2/3$, bracketing
+amplitudes decay faster: fitting $A+BV^{-\theta}$ to the compensated
+standard deviation of the simple family gives $A=1.0548$ with $\theta=0.63$
+freely fitted and $A=1.0562$ with $\theta$ fixed at $2/3$, bracketing
 the conjectured $\sigma_{TW_{1}}c(4)=1.05583$ of (\ref{eq:d4_amplitudes})
 to within a tenth of a percent, while the compensated mean gap admits
 no single correction exponent over our range, which is why it converges
@@ -695,7 +729,7 @@ visibly more slowly in Figure \ref{fig:compensated}.
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.85\columnwidth]{images/edgeworth_amplitude_vs_size.png}
+\includegraphics[width=0.85\columnwidth]{images/edgeworth_amplitude_vs_size.pdf}
 \par\end{centering}
 \caption{\label{fig:edgeworth}The approach to the limit. Left: the amplitude
 $\hat{c}(V)$ of the deviation of the standardized empirical distribution
@@ -720,9 +754,10 @@ $m\approx-0.79$ and $s\approx-0.72$. The local exponents tell a
 different story. Figure \ref{fig:local_exponent} plots the slope
 between consecutive sizes: the standard deviation exponent sits within
 $0.01$ of $-2/3$ from $V\approx2000$ onward, while the mean gap
-exponent drifts monotonically from $-0.90$ at $V\approx100$ through
-$-0.72$ at $V=20{,}000$ to $-0.70$ over the last legacy pair at
-$V=500{,}000$, still descending toward $-2/3$. A single fitted line
+exponent drifts monotonically from $-0.90$ at $V\approx100$ to $-0.72$
+at $V=20{,}000$ within the five million sample series, with the legacy
+series continuing the descent and reaching $-0.70$ over its last pair
+at $V=500{,}000$, still short of $-2/3$. A single fitted line
 over small sizes averages this drift and reports a transient. MNS
 saw the warning sign, observing that their best fit exponents increased
 monotonically as sizes were added, and were appropriately cautious. At
@@ -736,7 +771,7 @@ and with $F_{1}(0)=0.8319081\dots$ as the limiting Ramanujan probability.
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.8\columnwidth]{images/scaling_local_exponent_vs_size_all_families.png}
+\includegraphics[width=0.8\columnwidth]{images/scaling_local_exponent_vs_size_all_families.pdf}
 \par\end{centering}
 \caption{\label{fig:local_exponent}Local (consecutive size) log-log exponents
 of the mean gap and the standard deviation for all series, with the
@@ -757,14 +792,17 @@ distance to every candidate law growing with $V$, reaching $0.085$
 at $V=500{,}000$, sample skewness $74.5$, and excess kurtosis $1.15\times10^{4}$,
 against the $TW_{1}$ values $0.293$ and $0.165$. Figure \ref{fig:tail}
 shows the mechanism: the right tail of the simple model dies within
-$10^{-4}$ of the threshold $2\sqrt{3}$, while the multigraph model
+$10^{-3}$ of the threshold $2\sqrt{3}$, while the multigraph model
 has a heavy tail of far outliers, reaching $\lambda=3.538$ at $V=50{,}000$,
 with roughly $2\times10^{-5}$ of its mass more than ten standard
 deviations above the threshold at $V=500{,}000$ and an extreme sample
 $155$ standard deviations above the mean.
 These outliers are localized eigenvalues seeded by loops and multiple edges,
 whose density vanishes in the limit but whose spectral effect does
-not vanish at the $V^{-2/3}$ fluctuation scale. The lesson for experiments
+not vanish at the $V^{-2/3}$ fluctuation scale. In the language of
+section \ref{subsec:defects}, loops and multiple edges are binding
+defects of cycle rank one, and so they occur at constant rate per
+graph. The lesson for experiments
 in this area is that the universality class is a property of the conditioned
 model: the simple and multigraph models share the same limiting spectral
 distribution and the same almost sure convergence of $\lambda_{2}$
@@ -775,11 +813,11 @@ falling through $0.67$ with no sign of stabilizing.
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.7\columnwidth]{images/tail_survival_simple_vs_permutation_V500000.png}
+\includegraphics[width=0.7\columnwidth]{images/tail_survival_simple_vs_permutation_V500000.pdf}
 \par\end{centering}
 \caption{\label{fig:tail}Right tail $P(\lambda>x)$ at $V=500{,}000$ for
 the simple and multigraph permutation models on logarithmic scale.
-The simple model's tail terminates within $10^{-4}$ of $2\sqrt{3}$,
+The simple model's tail terminates within $10^{-3}$ of $2\sqrt{3}$,
 while the multigraph model's outliers, localized eigenvalues from
 loops and multiple edges, reach far beyond the threshold.}
 \end{figure}
@@ -825,7 +863,7 @@ quantiles and the quaternion sample against the $\beta=4$ quantiles.
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.42\columnwidth]{images/qq_vs_tracywidom2_abelian3_V15000_N1000000.png}\includegraphics[width=0.42\columnwidth]{images/qq_vs_tracywidom4_quaternion_V20000_N1000000.png}
+\includegraphics[width=0.42\columnwidth]{images/qq_vs_tracywidom2_abelian3_V15000_N1000000.pdf}\includegraphics[width=0.42\columnwidth]{images/qq_vs_tracywidom4_quaternion_V20000_N1000000.pdf}
 \par\end{centering}
 \caption{\label{fig:qq_beta}Quantile-quantile plots of the largest $\mathbb{Z}_{3}$
 cover dataset against Tracy-Widom $\beta=2$ (left) and of the largest
@@ -840,7 +878,7 @@ the statistics above.
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.8\columnwidth]{images/ks_statistic_symmetry_classes.png}
+\includegraphics[width=0.8\columnwidth]{images/ks_statistic_symmetry_classes.pdf}
 \par\end{centering}
 \caption{\label{fig:ks_classes}Kolmogorov-Smirnov distance of each pure family
 to the Tracy-Widom law of its own symmetry class (solid): regular
@@ -854,7 +892,7 @@ law.}
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.8\columnwidth]{images/mass_left_of_mean_vs_size_all_families.png}
+\includegraphics[width=0.8\columnwidth]{images/mass_left_of_mean_vs_size_all_families.pdf}
 \par\end{centering}
 \caption{\label{fig:mass_left}The fraction of samples below the sample mean
 against $V$ for all families, with the Tracy-Widom $\beta=1,2,4$
@@ -870,7 +908,7 @@ Tracy-Widom law.}
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.8\columnwidth]{images/moments_skewness_kurtosis_vs_size.png}
+\includegraphics[width=0.8\columnwidth]{images/moments_skewness_kurtosis_vs_size.pdf}
 \par\end{centering}
 \caption{\label{fig:moments}Sample skewness and excess kurtosis against $V$
 with the Tracy-Widom $\beta=1,2,4$ reference values. The regular
@@ -883,7 +921,7 @@ section \ref{sec:irregular}, are omitted.}
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.75\columnwidth]{images/pdf_universality_across_families.png}
+\includegraphics[width=0.75\columnwidth]{images/pdf_universality_across_families.pdf}
 \par\end{centering}
 \caption{\label{fig:universality}Standardized empirical densities of the
 largest datasets from five families overlaid on the standardized $\beta=1$
@@ -921,7 +959,8 @@ $\mathbb{Z}_{5}$) numerically gives the predicted constants in Table
 the mass of $M$ left of its mean, and the Ramanujan functional $F_{\beta_{1}}(0)F_{\beta_{2}}(0)$.
 The $\mathbb{Z}_{5}$ family, whose two blocks have identical marginal
 distributions and for which the equal scale hypothesis is automatic,
-matches all three predictions to three decimal places at $n=5000$.
+matches the mass and Ramanujan predictions to three decimal places
+at $n=5000$, and the ratio to within $3\times10^{-3}$.
 The $\mathbb{Z}_{4}$ family, whose blocks belong to different classes
 and converge at visibly different rates, is still drifting at $n=5000$,
 in each statistic monotonically toward the predicted value. The maximum
@@ -937,7 +976,6 @@ $\mathbb{Z}_{5}$ family ($p=0.81$), and only the larger sizes reveal
 that the distance is growing, a caution for experiments at the scale
 of MNS.
 
-\begin{center}
 \begin{table}
 \begin{centering}
 {\footnotesize\setlength{\tabcolsep}{4pt}
@@ -959,6 +997,8 @@ $K_{5}$ covers & $TW_{1}$ & $0.9551\ (0.9515)$ & $0.51891\ (0.51965)$ & $0.83281
 \hline
 $K_{5}-e$ covers & $TW_{1}$ & $0.9387\ (0.9515)$ & $0.51890\ (0.51965)$ & $0.82916\ (0.83191)$\tabularnewline
 \hline
+$K_{4}-e$ covers & $TW_{1}$ & $0.7326\ (0.9515)$ & $0.52518\ (0.51965)$ & $0.79490\ (0.83191)$\tabularnewline
+\hline
 \end{tabular}}
 \par\end{centering}
 \caption{\label{tab:predicted_observed}Observed statistics at the largest
@@ -967,15 +1007,17 @@ available size of each family against the values predicted by Conjectures
 and \ref{conj:irregular_base}: the ratio $g_{V}=\left(\rho-\mu_{V}\right)/\sigma_{V}$
 of the mean gap to the standard deviation, the mass left of the sample
 mean, and the fraction of samples below the Ramanujan threshold $\rho$
-($\rho=2\sqrt{3}$ except in the last row, where $\rho=\rho(K_{5}-e)=3.2628764\dots$).
+($\rho=2\sqrt{3}$ except for the $K_{5}-e$ and $K_{4}-e$ rows, where
+$\rho$ is the spectral radius of the universal cover of the base).
 Predicted values for the maximum laws were computed numerically from
 the Tracy-Widom distributions assuming independent blocks on a common
 scale. Each cell shows the observed value with the predicted limit
 in parentheses. Observed values are at $V=500{,}000$ (simple), $n=5000$
 (abelian and quaternion covers), and $V=10{,}000$ (the fixed base
-families).}
+families). The $K_{4}-e$ family converges slowest and its observed
+values are still far from the limits, for the reasons given in section
+\ref{sec:irregular}.}
 \end{table}
-\par\end{center}
 
 The Ramanujan column of Table \ref{tab:predicted_observed} is the
 experimental form of Conjecture \ref{conj:ramanujan_probabilities}.
@@ -994,7 +1036,7 @@ family, always strictly between $0$ and $1$.
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.8\columnwidth]{images/prob_ramanujan_vs_size_all_families.png}
+\includegraphics[width=0.8\columnwidth]{images/prob_ramanujan_vs_size_all_families.pdf}
 \par\end{centering}
 \caption{\label{fig:prob_ramanujan}Empirical $P\left(\lambda\leq\rho\right)$
 against $V$ for all families, where $\rho$ is the family's Ramanujan
@@ -1006,7 +1048,7 @@ in Table \ref{tab:predicted_observed}.}
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.8\columnwidth]{images/ratio_mean_gap_over_std_vs_size_all_families.png}
+\includegraphics[width=0.8\columnwidth]{images/ratio_mean_gap_over_std_vs_size_all_families.pdf}
 \par\end{centering}
 \caption{\label{fig:ratio}The ratio $g_{V}=\left(\rho-\mu_{V}\right)/\sigma_{V}$
 against $V$ for all families, where $\rho$ is the family's Ramanujan
@@ -1020,8 +1062,8 @@ $\beta=1$ reference for the regular and fixed base families.}
 
 \subsection{\label{subsec:amplitudes}Scaling Amplitudes}
 
-All nine series share the $V^{-2/3}$ rate, with family dependent
-amplitudes (Figures \ref{fig:compensated} and \ref{fig:scaling_abelian}).
+All ten series share the $V^{-2/3}$ rate, with family dependent
+amplitudes (Figure \ref{fig:compensated}).
 The fixed base families are treated in section \ref{sec:irregular}.
 For the abelian families the amplitudes themselves appear to carry
 no new constant: each character block $A_{\chi}$ is the adjacency
@@ -1047,20 +1089,15 @@ effective size for the quaternionic block differs from $n$ by a fixed
 power of $2$, a bookkeeping familiar from the conventions of the
 GSE. We do not regard the exponent $-1/6$ as established.
 
-\begin{figure}
-\begin{centering}
-\includegraphics[width=0.8\columnwidth]{images/scaling_loglog_abelian_cover.png}
-\par\end{centering}
-\caption{\label{fig:scaling_abelian}Mean gap and standard deviation of the
-largest new eigenvalue against the cover size $V=kn$ for the abelian
-families, with a $V^{-2/3}$ guide at the regular graph amplitude.
-The series run parallel to the guide at family dependent offsets.}
-\end{figure}
 
 
-\section{\label{sec:irregular}Covers of an Irregular Base Graph}
+\section{\label{sec:irregular}Covers of a Fixed Base Graph}
 
-Nothing in Conjecture \ref{conj:irregular_base} requires the base
+We now fix the base graph and let only the cover vary, testing three
+bases: the complete graph $K_{5}$, whose covers are $4$-regular and
+calibrate the fixed base model against section \ref{sec:regular},
+the irregular graph $K_{5}-e$, and the cycle rank two graph $K_{4}-e$
+of subsection \ref{subsec:k4e}. Nothing in Conjecture \ref{conj:irregular_base} requires the base
 graph to be regular, and in the irregular case nothing
 is proven: the largest new eigenvalue should concentrate
 at the spectral radius $\rho(B)$ of the universal cover, an algebraic
@@ -1069,9 +1106,10 @@ $\delta$ and $\Delta$ are the minimum and maximum degrees of $B$, with $TW_{1}$
 fluctuations at scale $k^{-2/3}$ and limiting Ramanujan probability
 $F_{1}(0)$, universally in the base graph.
 
-Our base is $K_{5}-e$, the complete graph on five vertices minus
-an edge, one of the smallest irregular base graphs of minimum degree three. Its spectrum is $\left\{ 1\pm\sqrt{7},-1,-1,0\right\} $,
-with Perron eigenvalue $1+\sqrt{7}=3.6457\dots$, and since the largest
+The main base is $K_{5}-e$, the complete graph on five vertices minus
+an edge, one of the smallest irregular base graphs of minimum degree
+three, with eigenvalues $1+\sqrt{7}=3.6457\dots$, $0$, $-1$, $-1$,
+and $1-\sqrt{7}$. Since the largest
 old eigenvalue exceeds $\rho(K_{5}-e)$, the largest new eigenvalue
 of a cover is not even its second largest eigenvalue, so that the
 exact removal of the lifted base spectrum matters. By a result of
@@ -1079,7 +1117,8 @@ McKay \cite{McKay2023}, $\rho(K_{5}-e)$ is the largest zero of
 \[
 x^{14}-20x^{12}+122x^{10}-152x^{8}-1295x^{6}+4540x^{4}-5948x^{2}-2000,
 \]
-an irreducible polynomial with no expression in radicals, giving
+an irreducible polynomial whose roots admit no expression in radicals,
+giving
 \[
 \rho(K_{5}-e)=3.26287646593635862827\dots,
 \]
@@ -1090,8 +1129,10 @@ quantity (see \cite{AngelFriedmanHoory2015,McKay2023} on computing
 $\rho$, and \cite{CrawfordMarchetteMaxwellMendelson2023} for related
 spectral experiments on structured random graphs).
 
-Both families were sampled at the scale of the strongest regular
-graph data: $5\times10^{6}$ independent uniform covers per size, at
+\subsection{\label{subsec:bulk_law}The Bulk Law}
+
+We sampled the $K_{5}$ and $K_{5}-e$ families at the scale of the
+strongest regular graph data: $5\times10^{6}$ independent uniform covers per size, at
 cover degrees $20\leq k\leq2000$, giving graphs on $V=5k$ between
 $100$ and $10{,}000$ vertices. The covers of $K_{5}$ are $4$-regular
 graphs with Ramanujan threshold $2\sqrt{3}$, of a different fine
@@ -1104,7 +1145,7 @@ reaches, around the algebraic centering $\rho(K_{5}-e)$.
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.75\columnwidth]{images/ks_statistic_vs_size_k5_covers.png}
+\includegraphics[width=0.75\columnwidth]{images/ks_statistic_vs_size_k5_covers.pdf}
 \par\end{centering}
 \caption{\label{fig:ks_k5}Kolmogorov-Smirnov distance of the standardized
 largest new eigenvalue to the four candidate laws for covers of $K_{5}-e$
@@ -1116,8 +1157,8 @@ only the distance to $\beta=1$ keeps falling.}
 Figure \ref{fig:ks_k5} shows the outcome of the distributional test.
 For both families the Kolmogorov-Smirnov distance to $\widetilde{TW}_{1}$
 falls monotonically with $V$, reaching $8.9\times10^{-4}$ for $K_{5}$
-and $9.4\times10^{-4}$ for $K_{5}-e$ at $V=10{,}000$, within a factor
-of two of the sampling floor and equal to the simple $4$-regular family's
+and $9.4\times10^{-4}$ for $K_{5}-e$ at $V=10{,}000$, a small multiple
+of the sampling floor and equal to the simple $4$-regular family's
 distance at the same size, while the distances to the other laws stall or grow, ending
 at $4.0\times10^{-3}$ ($\widetilde{TW}_{2}$), $7.9\times10^{-3}$
 ($\widetilde{TW}_{4}$), and $1.9\times10^{-2}$ (normal) for $K_{5}-e$.
@@ -1135,14 +1176,14 @@ Figure \ref{fig:qq_k5e} the corresponding quantile plot. The mass left of the me
 and $0.51890$ ($K_{5}-e$) against the $TW_{1}$ value $0.519652$,
 on the same convergence path as the simple family at equal sizes,
 and the ratio $g_{V}$ reaches $0.9551$ and $0.9387$ against the
-$TW_{1}$ ratio $0.951537\dots$ (Figure \ref{fig:ratio}). The local
+$TW_{1}$ ratio $\left|\mu_{TW_{1}}\right|/\sigma_{TW_{1}}$ (Figure \ref{fig:ratio}). The local
 exponents of the mean gap and standard deviation descend to $-0.673$
 and $-0.676$ for $K_{5}$ and $-0.670$ and $-0.678$ for $K_{5}-e$
 over the last pair of sizes, approaching $-2/3$ exactly as for the
-regular families (Figures \ref{fig:local_exponent} and \ref{fig:scaling_k5}).
+regular families (Figure \ref{fig:local_exponent}).
 The empirical Ramanujan probabilities at $V=10{,}000$ are
 \[
-P\left(\lambda_{new}\leq2\sqrt{3}\right)=0.83281,\ \ \ P\left(\lambda_{new}\leq\rho(K_{5}-e)\right)=0.82916,
+P\left(\lambda_{\mathrm{new}}\leq2\sqrt{3}\right)=0.83281,\ \ \ P\left(\lambda_{\mathrm{new}}\leq\rho(K_{5}-e)\right)=0.82916,
 \]
 against the conjectured $F_{1}(0)=0.8319081\dots$ (Table \ref{tab:predicted_observed}).
 Every statistic selects the $\beta=1$ class, as the reality of the
@@ -1151,7 +1192,7 @@ a centering which is not $2\sqrt{d-1}$ for any $d$.
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.7\columnwidth]{images/pdf_vs_tracywidom_k5_minus_edge_V10000_N5000000.png}
+\includegraphics[width=0.7\columnwidth]{images/pdf_vs_tracywidom_k5_minus_edge_V10000_N5000000.pdf}
 \par\end{centering}
 \caption{\label{fig:pdf_k5e}Standardized empirical density of the largest
 new eigenvalue over $5\times10^{6}$ random covers of $K_{5}-e$ at
@@ -1161,7 +1202,7 @@ the standard normal.}
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.6\columnwidth]{images/qq_vs_tracywidom1_k5_minus_edge_V10000_N5000000.png}
+\includegraphics[width=0.6\columnwidth]{images/qq_vs_tracywidom1_k5_minus_edge_V10000_N5000000.pdf}
 \par\end{centering}
 \caption{\label{fig:qq_k5e}Quantile-quantile plot of the largest $K_{5}-e$
 dataset against $\widetilde{TW}_{1}$, probability range $10^{-4}$
@@ -1169,18 +1210,8 @@ to $0.999$: the bulk of the law around the algebraic centering $\rho(K_{5}-e)$
 is Tracy-Widom at quantile resolution.}
 \end{figure}
 
-\begin{figure}
-\begin{centering}
-\includegraphics[width=0.8\columnwidth]{images/scaling_loglog_k5_covers.png}
-\par\end{centering}
-\caption{\label{fig:scaling_k5}Mean gap $\rho-\mu_{V}$ and standard deviation
-against $V$ for the fixed base families, with a $V^{-2/3}$ guide
-at the regular graph amplitude. The $K_{5}$ series approaches the
-guide itself, while the $K_{5}-e$ series runs parallel to it at a
-lower amplitude.}
-\end{figure}
 
-Two finer observations. First, the speed of convergence depends strongly
+The speed of convergence depends strongly
 on the base graph: the $K_{5}$ family sits within $10^{-3}$ of the
 limiting Ramanujan probability from $V=1000$ onward ($0.83258$ at
 $V=1000$), while the permutation model is still at $0.87282$ at
@@ -1197,91 +1228,320 @@ in the convention of (\ref{eq:hmy_constants}) with $V$ the cover
 size. The $K_{5}-e$ amplitudes plateau lower, with $\sigma_{V}V^{2/3}$
 descending through $0.893$ and the compensated gap through $0.839$
 at $V=10{,}000$, and so the $K_{5}-e$ analog of $c(d)$ is a new
-constant, approximately $0.69$ against $c(4)=0.8327$ (the fits $A+BV^{-\beta}$
+constant, approximately $0.69$ against $c(4)=0.8327$ (the fits $A+BV^{-\theta}$
 to the compensated standard deviation and gap give $0.686$ and $0.691$),
 the first measurement of an edge scaling constant for an irregular
-base graph.
+base graph. These amplitudes are stated with $V$ the cover size, and
+in the $k^{-2/3}$ normalization of Conjecture \ref{conj:irregular_base},
+with $V=5k$, they multiply by $5^{2/3}$.
 
-Second, the third and fourth moments tell a different story, and the
-accounting is instructive. The excess kurtosis of the $K_{5}-e$ family
-grows with $V$, from $0.26$ at $V=100$ to $2.52$ at $V=10{,}000$
-against the $TW_{1}$ value $0.165$, and its skewness drifts upward
-through $0.361$ against $0.293$, while the same statistics for $K_{5}$
+\subsection{\label{subsec:defects}Localized Defects and the Far Tails}
+
+The third and fourth moments tell a different story, and the accounting
+is instructive. The excess kurtosis of the $K_{5}-e$ family grows
+with $V$, from $0.26$ at $V=100$ to $2.52$ at $V=10{,}000$ against
+the $TW_{1}$ value $0.165$, and its skewness drifts upward through
+$0.361$ against $0.293$, while the same statistics for $K_{5}$
 are $0.28$ and $0.292$. Figure \ref{fig:tail_k5} locates the cause
 in a thin tail of far outliers, at frequencies near $10^{-5}$: at
 $V=10{,}000$ a fraction $9\times10^{-6}$ of the $K_{5}-e$ samples
 lie above $\rho+10\sigma_{V}$, while the extreme sample of the simple
-$4$-regular family sits only $9$ standard deviations out. These outliers
-are the tangles of \cite{Friedman2008} made visible sample by sample,
-and they have exact structure: they accumulate at computable constants
-(Figure \ref{fig:atoms}).
+$4$-regular family sits only $9$ standard deviations out. These
+outliers are the tangles of \cite{Friedman2008} made visible sample
+by sample, and they admit a complete quantitative description, one
+half of which we can prove.
 
-A subgraph of a cover projects to the base graph by a locally injective
-map, and a fixed connected subgraph $H$ of cycle rank $r$ occurs
-somewhere in a random degree $k$ cover with probability of order
-$k^{1-r}$. When the largest eigenvalue of $H$, computed with the
-appropriate branches of the universal cover attached to its vertices,
-exceeds $\rho(B)$, every occurrence of $H$ seeds a localized eigenvalue
-at that value. Computing these defect eigenvalues by the standard
-branch recursion on the universal cover, and confirming them by planting
-the subgraphs in sampled covers, we have that for $K_{5}-e$ no subgraph
+Note that every subgraph of a cover projects to the base graph by
+a locally injective map, since distinct neighbors of a vertex of a
+cover lie over distinct neighbors of its projection. With this in
+mind, fix a connected graph $H$ of minimum degree at least two admitting
+a locally injective map, an \emph{immersion}, $\varphi:H\rightarrow B$,
+and write $r(H)=e(H)-v(H)+1$ for its cycle rank. Let $H^{*}$ be the infinite graph obtained from
+$H$ by attaching, at each vertex $x$ of $H$ and each neighbor of
+$\varphi(x)$ not used by an edge of $H$ at $x$, the corresponding
+branch of the universal cover of $B$, and define the \emph{defect
+eigenvalue}
+\[
+\lambda_{B}(H)=\left\Vert A_{H^{*}}\right\Vert ,
+\]
+the spectral norm of the adjacency operator of $H^{*}$, maximized
+over the locally injective maps $\varphi$ when there are several.
+Deep inside any branch, $H^{*}$ contains arbitrarily large balls of
+the universal cover, and so $\lambda_{B}(H)\geq\rho(B)$ always,
+and when the inequality is strict we say that $H$ \emph{binds} an
+eigenvalue above $\rho(B)$. When it binds, $\lambda_{B}(H)$ lies above the essential
+spectrum, since removing finitely many vertices from $H^{*}$ leaves
+a union of branches, and $\lambda_{B}(H)$ is computable to any precision from the
+branch values $y_{u\rightarrow v}(\lambda)$, the fixed point of
+\[
+y_{u\rightarrow v}=\left(\lambda-\sum_{w\sim v,\ w\neq u}y_{v\rightarrow w}\right)^{-1}
+\]
+over the directed edges of $B$, which exists for $\lambda>\rho(B)$:
+each attached branch contributes its value to the diagonal, and $\lambda_{B}(H)$
+is the largest $\lambda$ with $\lambda_{\max}\left(A_{H}+D(\lambda)\right)=\lambda$,
+where $D(\lambda)$ is the diagonal matrix of attached branch values.
+Two elementary facts organize the far tails: copies of $H$
+appear in a random cover at a polynomial rate governed by the cycle
+rank, and any copy forces a new eigenvalue near $\lambda_{B}(H)$.
+\begin{prop}
+\label{prop:defect_counting}Let $B$ be a connected base graph, let
+$H$ be a connected graph of minimum degree at least two admitting
+a locally injective map to $B$, and let $X_{H}$ be the number of
+subgraphs of a uniformly random degree $k$ cover $H_{k}$ of $B$ isomorphic
+to $H$. Then
+\[
+E\left[X_{H}\right]=c_{H}k^{1-r(H)}\left(1+O\left(k^{-1}\right)\right),\ \ \ c_{H}=\frac{J(H,B)}{\left|\mathrm{Aut}(H)\right|},
+\]
+where $J(H,B)$ is the number of locally injective homomorphisms from
+$H$ to $B$, and, when $r(H)\geq2$,
+\[
+P\left(X_{H}\geq1\right)=c_{H}k^{1-r(H)}\left(1+o\left(1\right)\right).
+\]
+\end{prop}
+\begin{proof}
+Suppose first that $B$ is simple, as are all of our fixed bases,
+since loops and multiple edges require only notational changes. Copies
+of $H$ in the cover correspond to pairs consisting of a locally
+injective homomorphism $\psi:H\rightarrow B$ and a lift of $\psi$,
+with each copy counted $\left|\mathrm{Aut}(H)\right|$ times. Fix
+$\psi$, and choose for each vertex of $H$ a lift in the fiber over
+its image, injectively within each fiber, which can be done in $k^{v(H)}\left(1+O(k^{-1})\right)$
+ways. The chosen vertices span a copy of $H$ exactly when, for each
+edge $e$ of $B$, the permutation $\sigma_{e}$ maps every specified
+source to its specified target. If $m_{e}$ edges of $H$ lie over
+$e$, then the sources are distinct and the targets are distinct,
+by fiber injectivity and the local injectivity of $\psi$, and so
+this event has probability $\left(k-m_{e}\right)!/k!=k^{-m_{e}}\left(1+O(k^{-1})\right)$,
+independently across the edges of $B$. Multiplying and summing over
+$\psi$ gives the expectation, since $v(H)-e(H)=1-r(H)$.
+
+For the probability, we have that $E[X_{H}^{2}]=E[X_{H}]+E[Y]$, where
+$Y$ counts ordered pairs of distinct copies. The union of two distinct
+copies is either disconnected, and such pairs contribute $c_{H}^{2}k^{2-2r}\left(1+O(k^{-1})\right)$
+by the computation above, or connected of cycle rank at least $r+1$:
+if two distinct copies overlap, their intersection is a proper subgraph
+$F$ of $H$, and $r(U)=2r(H)-1-r(F)+q$ for the union $U$, where
+$q$ is the number of components of $F$ and $r(F)=e(F)-v(F)+q$, so
+it suffices that $r(F)\leq r(H)-2+q$.
+For connected $F$, with $q=1$, this says $r(F)\leq r(H)-1$, which holds since
+a proper connected subgraph of a graph of minimum degree two has strictly
+smaller cycle rank: a path leaving the subgraph cannot terminate,
+and closes an independent cycle whether it returns to the subgraph
+or to itself. For disconnected $F$, with $q\geq2$,
+it follows from $r(F)\leq r(H)$, since the cycle spaces of disjoint
+subgraphs embed independently into that of $H$. Each connected union type
+of cycle rank at least $r+1$ contributes $O(k^{-r})$, and there
+are finitely many, and so $E[X_{H}^{2}]=E[X_{H}]\left(1+o(1)\right)+E[X_{H}]^{2}\left(1+o(1)\right)$.
+The claim follows from $P(X_{H}\geq1)\geq E[X_{H}]^{2}/E[X_{H}^{2}]$
+and $P(X_{H}\geq1)\leq E[X_{H}]$.
+\end{proof}
+The second fact is that every occurrence produces its eigenvalue.
+\begin{prop}
+\label{prop:defect_eigenvalue}In the setting of Proposition \ref{prop:defect_counting},
+suppose that $r(H)\geq2$ and $\lambda_{B}(H)>\rho(B)$. Then for
+every $\epsilon>0$ there is a constant $c=c(B,H,\epsilon)>0$ such
+that for all $k$ sufficiently large,
+\[
+P\left(\lambda_{\mathrm{new}}(H_{k})\geq\lambda_{B}(H)-\epsilon\right)\geq c\,k^{1-r(H)}.
+\]
+\end{prop}
+\begin{proof}
+Let $H_{\ell}^{*}$ denote the truncation of $H^{*}$ at depth $\ell$
+from $H$. Since $H^{*}$ is connected and locally finite, $\lambda_{\max}(H_{\ell}^{*})$
+increases to $\left\Vert A_{H^{*}}\right\Vert $ as $\ell\rightarrow\infty$,
+and so we may fix $\ell$ with $\lambda_{\max}(H_{\ell}^{*})>\lambda_{B}(H)-\epsilon/2$.
+Let $u\geq0$ be the Perron eigenvector of $H_{\ell}^{*}$ with $\left\Vert u\right\Vert =1$,
+supported on $N=N(\ell)$ vertices. Call a copy of $H$ in the cover
+\emph{clean} if the depth $\ell$ neighborhood of its vertex set is
+isomorphic, over $B$, to $H_{\ell}^{*}$. A copy which is not clean
+lies in a connected subgraph of the cover of size $O_{\ell}(1)$ and
+cycle rank at least $r(H)+1$, since any deviation of the neighborhood
+from $H_{\ell}^{*}$ closes an additional independent cycle within
+distance $\ell$, and the expected number of these is
+$O_{\ell}(k^{-r(H)})$ by the computation of Proposition \ref{prop:defect_counting},
+and so with probability at least $c_{H}k^{1-r(H)}\left(1+o(1)\right)$
+the cover contains a clean copy.
+
+Given a clean copy, transplant $u$ onto its neighborhood. The subspace
+of functions which are constant on every fiber is invariant under
+the adjacency matrix $A$ of the cover, its spectrum on this subspace
+is the spectrum of $B$, and its spectrum on the orthogonal complement
+is exactly the new spectrum. Writing $P$ for the orthogonal projection
+onto the fiber constant functions, each fiber meets the support of
+$u$ in at most $N$ vertices, and so by the Cauchy-Schwarz inequality
+\[
+\left\Vert Pu\right\Vert ^{2}=\sum_{b\in V(B)}\frac{1}{k}\left(\sum_{x\in\pi^{-1}(b)}u(x)\right)^{2}\leq\frac{N}{k}.
+\]
+Set $w=u-Pu$, a vector in the new subspace with $\left\Vert w\right\Vert ^{2}\geq1-N/k$.
+Since $u\geq0$ and the neighborhood of the clean copy contains $H_{\ell}^{*}$
+as a subgraph, we have that $\left\langle u,Au\right\rangle \geq\lambda_{\max}(H_{\ell}^{*})$,
+and since $\left\Vert A\right\Vert $ is at most the maximum degree
+of $B$,
+\[
+\lambda_{\mathrm{new}}(H_{k})\geq\frac{\left\langle w,Aw\right\rangle }{\left\Vert w\right\Vert ^{2}}\geq\left\langle u,Au\right\rangle -3\left\Vert A\right\Vert \left\Vert Pu\right\Vert \geq\lambda_{\max}(H_{\ell}^{*})-O_{\ell}\left(k^{-1/2}\right),
+\]
+whose right hand side is positive and exceeds $\lambda_{B}(H)-\epsilon$
+for $k$ large, and the result follows.
+\end{proof}
+One family of defects is degenerate. A graph which is itself a cover
+of $B$, beginning with $B$ under the identity, saturates every direction
+at every vertex, and so a copy of it is a full connected component,
+with defect eigenvalue its own Perron eigenvalue: its occurrence disconnects
+the cover. Throughout we condition on connected covers, which the
+pipeline enforces by removing the base spectrum by value (section
+\ref{subsec:dataset}), and we exclude covers of $B$ from the defect
+catalogue and from the minimum in the conjecture below. By Proposition
+\ref{prop:defect_counting} the conditioning changes probabilities
+by a factor $1+O(k^{1-r(B)})$. We believe that the remaining defects
+account for the entire polynomial tail, and conjecture the matching
+upper bound.
+\begin{conjecture}
+\label{conj:defect_completeness}Let $B$ be a connected base graph
+of cycle rank at least two, and let $H_{k}$ be a uniformly random
+degree $k$ cover of $B$, conditioned on connectedness. Then for every
+$\epsilon>0$,
+\[
+P\left(\lambda_{\mathrm{new}}(H_{k})>\rho(B)+\epsilon\right)=k^{1-r(\epsilon)+o(1)},
+\]
+where
+\[
+r(\epsilon)=\min\left\{ r(H):\ H\text{ immerses in }B\text{ and is not a cover of }B,\ \lambda_{B}(H)>\rho(B)+\epsilon\right\} ,
+\]
+and where the probability is smaller than every power of $k$ when
+no such $H$ exists.
+\end{conjecture}
+For regular Ramanujan bases, Conjecture \ref{conj:defect_completeness}
+is essentially the theorem of Friedman and Kohler \cite{FriedmanKohler2014},
+and the coexistence of a Tracy-Widom bulk with a thin family of localized
+outliers is the picture proven at the sparse Erd\H{o}s-R\'{e}nyi
+edge \cite{AltDucatezKnowles2021,AltDucatezKnowles2023,HiesmayrMcKenzie2025}.
+Proposition \ref{prop:defect_eigenvalue} is the elementary half in
+general. Together with the fluctuation conjecture, the defect picture
+determines exactly which statistics converge.
+\begin{cor}
+\label{cor:moment_divergence}Assume the scaling of Conjecture \ref{conj:irregular_base},
+and suppose that some $H$ immersing in $B$, not a cover of $B$, has
+$\lambda_{B}(H)>\rho(B)$, with $r^{*}\geq2$ the least cycle rank
+of such an $H$. Then the $p^{th}$ absolute moment of $\left(\lambda_{\mathrm{new}}(H_{k})-\rho(B)\right)k^{2/3}$
+diverges as $k\rightarrow\infty$ for every $p>3\left(r^{*}-1\right)/2$.
+\end{cor}
+To see this, note that a defect at fixed height $\Delta=\lambda_{B}(H)-\rho(B)$
+sits at $\Delta/\sigma_{k}\asymp\Delta k^{2/3}$ standardized units
+above the mean, and occurs with probability $\asymp k^{1-r^{*}}$
+by Propositions \ref{prop:defect_counting} and \ref{prop:defect_eigenvalue},
+and so contributes to the $p^{th}$ standardized moment at order
+\begin{equation}
+k^{1-r^{*}}\left(\Delta k^{2/3}\right)^{p}\asymp k^{1-r^{*}+\frac{2p}{3}},\label{eq:moment_exponent}
+\end{equation}
+which diverges exactly when $p>3\left(r^{*}-1\right)/2$. Under Conjecture
+\ref{conj:defect_completeness}, holding uniformly down to the fluctuation
+scale, the moments below the threshold converge instead to those of
+$c_{B}\,TW_{1}$. Equation (\ref{eq:moment_exponent}) organizes every
+moment anomaly in this paper. For the permutation multigraph model, whose loops and multiple
+edges are binding defects of cycle rank one, even the tail mass is
+of constant order and the law itself fails, which is what section
+\ref{subsec:multigraph} observed. For $K_{4}-e$, where $r^{*}=2$,
+the variance itself is eventually dominated by the defect band, growing
+relative to the bulk like $k^{1/3}$, and at the bulk scale the skewness
+diverges like $k$ and the kurtosis like $k^{5/3}$, so that the raw moments of this
+family are the most contaminated in the dataset, and the raw ratio
+$g_{V}$ of section \ref{subsec:k4e} must eventually turn around
+and decrease, with only its trimmed version converging to the $TW_{1}$
+ratio.
+For $K_{5}-e$ and $K_{5}$, where $r^{*}=3$, the variance is safe,
+the kurtosis diverges like $k^{2/3}$, matching the observed growth,
+and $p=3$ is exactly critical: the defects add a constant, non-vanishing
+offset to the skewness, which is why the $K_{5}-e$ skewness settles
+near $0.36$ rather than at the Tracy-Widom value $0.293$, while
+for $K_{5}$ the constant is too small to resolve. Every quantile
+level statistic is immune, since the total defect mass vanishes: the
+Kolmogorov-Smirnov distance moves by at most the tail mass and the
+Ramanujan probability by less, and this is why the fixed base families
+are omitted from Figure \ref{fig:moments} while every distributional
+test of section \ref{subsec:bulk_law} converges.
+
+The data confirms the computed defects in detail. Evaluating $\lambda_{B}(H)$
+by the branch recursion, and confirming the values by planting the
+subgraphs in sampled covers, we have that for $K_{5}-e$ no subgraph
 of cycle rank two binds an eigenvalue above $\rho$, that $K_{4}$,
 of cycle rank three, binds
 \[
-\lambda_{K_{4}}=3.3391340785\dots,
+\lambda_{K_{5}-e}\left(K_{4}\right)=3.3391340785\dots,
 \]
-with its subdivisions filling the interval $(\rho,\lambda_{K_{4}})$,
+with its subdivisions filling the interval below it,
 and that the largest cycle rank four value is $3.4519402\dots$, while
 a disjoint copy of $K_{5}-e$ itself would give $1+\sqrt{7}$. The
-data matches this picture in detail. The outlier values at the largest
-sizes fill an interval above $\rho$, leave a gap, and cluster on
-the $K_{4}$ atom, where the extreme samples at $V=5000$ and $10{,}000$
-sit, and the extremes at $V\leq2000$ sit instead on the rank four
-atom, which decays faster and is gone by $V=5000$. The frequencies
-obey the predicted powers: the count in a window around the $K_{4}$
+outlier values at the largest sizes fill an interval above $\rho$,
+leave a gap, and cluster on the $K_{4}$ atom, where the extreme samples
+at $V=5000$ and $10{,}000$ sit, and the extremes at $V\leq2000$
+sit instead on the rank four atom, which decays faster and is gone
+by $V=5000$ (Figure \ref{fig:atoms}). The frequencies obey Proposition
+\ref{prop:defect_counting}: the count in a window around the $K_{4}$
 atom decays with fitted exponent $2.02\pm0.13$ against the predicted
-$k^{-2}$, and at thresholds beyond the reach of cycle rank three the
-fitted exponent is $2.90\pm0.14$ against $k^{-3}$. The apparent
+$k^{-2}$, and at thresholds beyond the reach of cycle rank three
+the fitted exponent is $2.90\pm0.14$ against $k^{-3}$. The apparent
 lengthening of the tail, from $27$ standard deviations at $V=5000$
 to $42$ at $V=10{,}000$, is then exact: a fixed atom measured in
 units of $\sigma_{V}\propto V^{-2/3}$ lengthens by $2^{2/3}=1.587$,
 and the observed ratio is $1.584$. For the $K_{5}$ family the same
 computation gives the atom
 \[
-\lambda_{K_{4}}=\frac{7}{2}
+\lambda_{K_{5}}\left(K_{4}\right)=\frac{7}{2}
 \]
 exactly, and the six samples more than nine standard deviations above
-the mean at $V=10{,}000$ all lie in $[3.497,3.510]$. For regular Ramanujan bases
-such as $K_{5}$ the polynomial decay of the outlier probability is
-a theorem of Friedman and Kohler \cite{FriedmanKohler2014}, and the
-atoms with their $k^{1-r}$ frequencies are its microscopic content,
-and the coexistence of a Tracy-Widom bulk with a thin family of localized
-outliers is the picture proven at the sparse Erd\H{o}s-R\'{e}nyi
-edge \cite{AltDucatezKnowles2021,AltDucatezKnowles2023,HiesmayrMcKenzie2025}.
-These outliers are the multigraph phenomenon of section \ref{subsec:multigraph}
-in miniature. They dominate the third and fourth moments, which is
-why the fixed base families are omitted from Figure \ref{fig:moments},
-however at frequency $10^{-5}$ they are invisible to every quantile
-level statistic, moving the Kolmogorov-Smirnov distance by at most
-their total mass and the Ramanujan probability by even less. The bulk
-law is $TW_{1}$, and the atoms ride on top of it.
+the mean at $V=10{,}000$ all lie in $[3.497,3.510]$. Table \ref{tab:defect_catalogue}
+collects the catalogue across all three fixed bases, with the $K_{4}-e$
+values derived in subsection \ref{subsec:k4e}.
+
+\begin{table}
+\begin{centering}
+{\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+base $B$ & defect $H$ & $r(H)$ & $\lambda_{B}(H)$ & rate $k^{1-r}$ & fitted exponent\tabularnewline
+\hline
+$K_{5}-e$ & $K_{4}$ & $3$ & $3.3391340785\dots$ & $k^{-2}$ & $2.02\pm0.13$\tabularnewline
+\hline
+$K_{5}-e$ & largest rank four & $4$ & $3.4519402\dots$ & $k^{-3}$ & $2.90\pm0.14$\tabularnewline
+\hline
+$K_{5}$ & $K_{4}$ & $3$ & $7/2$ & $k^{-2}$ & $1.7\pm0.7$\tabularnewline
+\hline
+$K_{4}-e$ & $\theta(2,2,4)$ & $2$ & $2.5118521\dots$ & $k^{-1}$ & $\approx1.3$, descending\tabularnewline
+\hline
+$K_{4}-e$ & $\theta(1,2,5)$ & $2$ & $2.5136918\dots$ & $k^{-1}$ & $\approx1.3$, descending\tabularnewline
+\hline
+$K_{4}-e$ & rank three band & $3$ & $\lesssim2.530$ & $k^{-2}$ & $1.96$\tabularnewline
+\hline
+\end{tabular}}
+\par\end{centering}
+\caption{\label{tab:defect_catalogue}The catalogue of leading localized defects
+for the three fixed base families. Each row lists a subgraph $H$ immersing
+in $B$, its cycle rank $r(H)$, the defect eigenvalue $\lambda_{B}(H)$
+computed by the branch recursion, the occurrence rate $k^{1-r(H)}$
+of Proposition \ref{prop:defect_counting}, and the exponent fitted
+to the observed outlier counts. Here $\theta(a,b,c)$ is the generalized
+theta graph whose two branch vertices are joined by routes of lengths
+$a$, $b$, and $c$, and the two $K_{4}-e$ atoms sit too close together
+for separate counts, so one exponent is fitted to the pair.}
+\end{table}
+
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.95\columnwidth]{images/outlier_atoms_k5_families.png}
+\includegraphics[width=0.95\columnwidth]{images/outlier_atoms_k5_families.pdf}
 \par\end{centering}
 \caption{\label{fig:atoms}Every sample more than eight standard deviations
 above the mean, against $V$, for the $K_{5}-e$ (left) and $K_{5}$
 (right) cover families, with the computed defect eigenvalues overlaid:
-the outliers lock onto the atoms $\lambda_{K_{4}}=3.33913\dots$
-(for $K_{5}$: exactly $7/2$) and the cycle rank four values (dotted),
-the continuum of $K_{4}$ subdivisions drains toward $\rho$, and
-the frequencies decay like $k^{1-r}$.}
+the outliers lock onto the $K_{4}$ atoms, $3.33913\dots$ for $K_{5}-e$
+and exactly $7/2$ for $K_{5}$, and onto the cycle rank four values
+(dotted), while the continuum of $K_{4}$ subdivisions drains toward
+$\rho$ and the frequencies decay like $k^{1-r}$.}
 \end{figure}
 
 \begin{figure}
 \begin{centering}
-\includegraphics[width=0.7\columnwidth]{images/tail_survival_standardized_k5_families_V10000.png}
+\includegraphics[width=0.7\columnwidth]{images/tail_survival_standardized_k5_families_V10000.pdf}
 \par\end{centering}
 \caption{\label{fig:tail_k5}Standardized right tail $P(\lambda>x)$ at $V=10{,}000$
 for the simple $4$-regular, $K_{5}$ cover, and $K_{5}-e$ cover families.
@@ -1290,6 +1550,82 @@ while the $K_{5}-e$ family carries a thin far outlier tail at frequency
 near $10^{-5}$, reaching $42$ standard deviations, and the $K_{5}$
 family a much thinner one.}
 \end{figure}
+
+\subsection{\label{subsec:k4e}The Boundary Case $K_{4}-e$}
+
+The third fixed base, $K_{4}-e$, tests Conjecture \ref{conj:irregular_base}
+at its boundary: the complete graph on four vertices minus an edge
+has cycle rank exactly two, degrees $\left(2,3,3,2\right)$, and the
+closed form
+\[
+\rho(K_{4}-e)=\sqrt{1+2\sqrt{7}}=2.5082867902\dots.
+\]
+Suppressing its two degree two vertices identifies $K_{4}-e$ with
+the theta graph, two vertices joined by three parallel edges, and
+so random covers of $K_{4}-e$ are subdivisions of random theta covers,
+which are exactly the bipartite cubic multigraphs built from three
+independent uniform permutations, the bipartite model of MNS. We sampled
+$10^{6}$ covers per size at the same seven sizes $V=4k$ between
+$100$ and $10{,}000$.
+
+The family fits the framework, and it converges more slowly than any
+other. The mean approaches $\rho$ from below with the ratio $g_{V}$
+rising through $0.7326$ at $V=10{,}000$ and the Ramanujan probability
+through $0.79490$, both far from their conjectured limits $\left|\mu_{TW_{1}}\right|/\sigma_{TW_{1}}$
+and $F_{1}(0)$. The raw distributional statistics are contaminated
+in a way the other families only hint at: the excess kurtosis grows
+to $12.7$, and the Kolmogorov-Smirnov distance to $\widetilde{TW}_{1}$,
+after falling to $3.8\times10^{-3}$ at $V=500$, grows again to $1.9\times10^{-2}$
+at $V=10{,}000$ (Figure \ref{fig:k4e}, left). The cause is the far
+tail, and removing it, by discarding the $0.2\%$ of samples beyond
+six standard deviations, restores $\widetilde{TW}_{1}$ as the nearest
+law from $V=1000$ on, with distance $4.0\times10^{-3}$ at $V=10{,}000$
+against $6.4\times10^{-3}$ and $9.9\times10^{-3}$ for $\widetilde{TW}_{2}$
+and $\widetilde{TW}_{4}$.
+
+The tail itself differs from the $K_{5}-e$ tail exactly as the defect
+picture predicts. No cycle rank one subgraph binds an eigenvalue above
+$\rho$, and no connected $2$-cover of $K_{4}-e$ has a new eigenvalue
+above $\rho$ either, as a direct check of all $32$ signings shows,
+however the base now has cycle rank two, and so proper rank two subgraphs
+exist, generalized thetas whose routes are longer than the base's
+and which carry branches, occurring at the rate $k^{-1}$ of Proposition
+\ref{prop:defect_counting}: the two shortest, $\theta(2,2,4)$ and
+$\theta(1,2,5)$ in the notation of Table \ref{tab:defect_catalogue},
+bind at
+\[
+2.5118521\dots\ \ \ \text{and}\ \ \ 2.5136918\dots,
+\]
+computed by the same branch recursion, one power of $k$ more frequent
+than the leading $K_{5}-e$ defects. Above the rank two band, rank
+three shapes reach $\approx2.530$ at rate $k^{-2}$. The data shows precisely this structure (Figure \ref{fig:k4e},
+right): the outliers form a dense band draining toward $\rho$ rather
+than isolated atoms, capped near $2.530$ at the largest sizes, with
+the count above the rank two cap decaying with fitted exponent $1.96$
+and the count at the cap decaying visibly more slowly, still descending
+toward the predicted $1$. In the notation of Conjecture \ref{conj:defect_completeness},
+$r(\epsilon)=2$ for $\epsilon$ below $\approx0.006$ and $3$ up
+to $\approx0.022$. The comparison across the three fixed bases is
+the point: the denser the base, the higher the cycle rank at which
+the defect hierarchy starts, and the further the atoms sit from $\rho$.
+For $K_{4}-e$ the hierarchy starts at rank two, the band crowds the
+bulk at accessible sizes, and the moments and even the raw Kolmogorov-Smirnov
+distance feel it, which is why this family, at the boundary of the
+conjecture, converges last.
+
+\begin{figure}
+\begin{centering}
+\includegraphics[width=0.95\columnwidth]{images/k4_minus_edge_bulk_and_defect_band.pdf}
+\par\end{centering}
+\caption{\label{fig:k4e}Covers of $K_{4}-e$. Left: Kolmogorov-Smirnov distance
+of the standardized sample to $\widetilde{TW}_{1}$, for all samples
+and with the defect band removed. Right: every sample more than eight
+standard deviations above the mean against $V$, with $\rho(K_{4}-e)$
+dashed and the two computed rank two defect eigenvalues dotted. The
+band drains toward $\rho$ at rate $k^{-1}$, with rank three shapes
+reaching $\approx2.530$ at rate $k^{-2}$.}
+\end{figure}
+
 
 \section{\label{sec:open_problems}Open Problems}
 
@@ -1301,7 +1637,7 @@ analog of Theorem \ref{thm:hmy} is known, and for irregular bases
 even the correct formulation of edge rigidity around $\rho(B)$ is
 open. The abelian case seems the natural first target, since the block
 $A_{\chi}$ is an explicit random Hermitian matrix built from a random
-regular graph and iid phases.
+regular graph and independent uniform phases.
 \begin{problem}
 \label{prob:abelian_block}Prove that the largest eigenvalue of the
 $\mathbb{Z}_{3}$-character block $A_{\chi}$ of a random $\mathbb{Z}_{3}$-cover
@@ -1342,19 +1678,13 @@ plus an independent point process of outliers?
 \end{problem}
 
 \begin{problem}
-\label{prob:outlier_rate}For a fixed base graph $B$ and $\epsilon>0$,
-determine the decay rate of
-\[
-P\left(\lambda_{new}(H_{k})>\rho(B)+\epsilon\right)
-\]
-for a uniformly random degree $k$ cover $H_{k}$ of $B$. We conjecture
-that the rate is $k^{1-r(\epsilon)}$ up to constants, where $r(\epsilon)$
-is the least cycle rank of a graph mapping locally injectively into
-$B$ whose defect eigenvalue exceeds $\rho(B)+\epsilon$: the $K_{5}-e$
-data gives fitted exponents $2.02\pm0.13$ below $\lambda_{K_{4}}$
-and $2.90\pm0.14$ above it. For regular Ramanujan bases this is essentially
-the theorem of Friedman and Kohler \cite{FriedmanKohler2014}, and
-the irregular case is open.
+\label{prob:outlier_rate}Prove the upper bound in Conjecture \ref{conj:defect_completeness}:
+that nothing but the defects of section \ref{subsec:defects} inhabits
+the polynomial tail. The lower bound is Proposition \ref{prop:defect_eigenvalue},
+the regular Ramanujan case is the theorem of Friedman and Kohler \cite{FriedmanKohler2014},
+and the fitted exponents of sections \ref{subsec:defects} and \ref{subsec:k4e}
+match the conjectured rates on two irregular bases with different
+leading ranks.
 \end{problem}
 
 \subsection*{Growing Covers}

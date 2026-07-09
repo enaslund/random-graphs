@@ -26,6 +26,11 @@ RAMANUJAN_THRESHOLD = 2 * np.sqrt(DEG - 1)
 # eigenvalues of K5-e covers; the base spectrum is {1 +- sqrt(7), -1, -1, 0}.
 RHO_K5_MINUS_E = 3.26287646593635862827
 
+# Spectral radius of the universal cover of K4 minus an edge: exactly
+# sqrt(1 + 2*sqrt(7)) (verified by the branch recursion to 10 digits).
+# Base spectrum: {(1 +- sqrt(17))/2, 0, -1}; degrees (2, 2, 3, 3).
+RHO_K4_MINUS_E = np.sqrt(1 + 2 * np.sqrt(7))
+
 # Tracy-Widom moments in the original (un-recentered) normalization,
 # matching random_graphs/stats.py and Bornemann (2010).
 TW_MEAN = {1: -1.2065335745820, 2: -1.771086807411, 4: -2.306884893241}
@@ -154,6 +159,9 @@ _PATTERNS = [
     ("irreg_covers",
      r"irreg_covers_k5_minus_edge_cover_V(?P<k>\d+)x(?P<base>\d+)_N(?P<N>\d+)\.npy",
      "k5_minus_edge", "python"),
+    ("k4_minus_edge",
+     r"k4_minus_edge_cover_V(?P<k>\d+)x(?P<base>\d+)_N(?P<N>\d+)\.npy",
+     "k4_minus_edge", "python"),
 ]
 
 
@@ -183,14 +191,15 @@ def discover_datasets(data_dir=DATA_DIR):
             elif family == "quaternion":
                 base_size, cover_deg = int(g["base"]), 4
                 V, N = 4 * base_size, int(g["N"])
-            elif family in ("k5_cover", "k5_minus_edge"):
+            elif family in ("k5_cover", "k5_minus_edge", "k4_minus_edge"):
                 base_size, cover_deg = int(g["base"]), int(g["k"])
                 V, N = base_size * cover_deg, int(g["N"])
-            # K5 is 4-regular; K5 - e is irregular (degrees 3, 4, 4, 4, 3)
-            base_degree = None if family == "k5_minus_edge" else int(
-                g.get("deg", DEG))
-            threshold = (RHO_K5_MINUS_E if family == "k5_minus_edge"
-                         else RAMANUJAN_THRESHOLD)
+            # K5 is 4-regular; K5 - e and K4 - e are irregular
+            base_degree = (None if family in ("k5_minus_edge", "k4_minus_edge")
+                           else int(g.get("deg", DEG)))
+            threshold = {"k5_minus_edge": RHO_K5_MINUS_E,
+                         "k4_minus_edge": RHO_K4_MINUS_E}.get(
+                family, RAMANUJAN_THRESHOLD)
             records.append({
                 "path": os.path.join(directory, fname),
                 "file": os.path.join("data", subdir, fname),

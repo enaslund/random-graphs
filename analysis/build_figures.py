@@ -18,7 +18,7 @@ from scipy import stats as sps  # noqa: E402
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from dataset_utils import (  # noqa: E402
     ATOMS_K5, ATOMS_K5_MINUS_E, F_BETA_AT_0, MAX_LAW, RAMANUJAN_THRESHOLD,
-    REPO_ROOT, RHO_K5_MINUS_E, TW_MEAN, TW_STD, TW1_MEAN_OVER_STD,
+    REPO_ROOT, RHO_K4_MINUS_E, RHO_K5_MINUS_E, TW_MEAN, TW_STD, TW1_MEAN_OVER_STD,
     size_scaling_prefactor, tw, tw_cdf_standardized, tw_pdf_standardized,
     tw_quantile_standardized, tw_shape_moments,
 )
@@ -48,6 +48,7 @@ SERIES = [
     ("quaternion", 4, "Quaternion cover", "#e87ba4", "X"),
     ("k5_cover", None, "$K_5$ cover", "#0d8ba3", "h"),
     ("k5_minus_edge", None, "$K_5-e$ cover", "#8a5a2b", "*"),
+    ("k4_minus_edge", None, "$K_4-e$ cover", "#5e548e", "d"),
 ]
 
 # Distribution-curve palette (used in PDF/CDF/KS figures): same fixed slots.
@@ -318,7 +319,8 @@ def fig_moments(rows):
     shape = {beta: tw_shape_moments(beta) for beta in (1, 2, 4)}
     fig, axes = plt.subplots(1, 2, figsize=(6.8, 2.9))
     for family, k, label, color, marker in SERIES:
-        if family in ("matlab_loop_cover", "k5_cover", "k5_minus_edge"):
+        if family in ("matlab_loop_cover", "k5_cover", "k5_minus_edge",
+                      "k4_minus_edge"):
             # third/fourth moments contaminated by far-outlier tails
             # (multigraph: kurtosis ~10^4; fixed-base covers: see the
             # standardized-tail figure) -- the bulk statistics are in the
@@ -550,6 +552,79 @@ def fig_edgeworth():
     fig.subplots_adjust(wspace=0.34)
     fig.suptitle("The deviation of the standardized ECDF from $TW_1$ is a"
                  " single skewness profile with power-law amplitude", y=1.03)
+    return fig
+
+
+# ---------------------------------------------------------------------------
+# 2h. K4-e: the defect band and the trimmed bulk. The base has cycle rank 2,
+# so proper rank-2 defects (long thetas with branches) bind above rho at
+# rate ~1/k; computed values 2.51185 and 2.51369 cap the leading band, with
+# rank-3 shapes reaching ~2.530 at rate ~1/k^2. Trimming the band (|z|>6)
+# recovers a TW1-consistent bulk.
+# ---------------------------------------------------------------------------
+
+K4E_DEFECTS = {
+    r"$\theta(2,2,4)$": 2.5118521208,
+    r"$\theta(1,2,5)$": 2.5136917846,
+}
+
+
+def fig_k4e():
+    from dataset_utils import tw_cdf_standardized as _cdf
+    sizes = (25, 50, 125, 250, 500, 1250, 2500)
+    raw_D, trim_D, outliers = [], [], {}
+    cdf1 = _cdf(1)
+    for k in sizes:
+        V = 4 * k
+        x = np.load(os.path.join(
+            REPO_ROOT, "data", "k4_minus_edge",
+            f"k4_minus_edge_cover_V{k}x4_N1000000.npy"))
+        m, s0 = x.mean(), x.std(ddof=1)
+        z = np.sort((x - m) / s0)
+        raw_D.append(sps.kstest(z, cdf1).statistic)
+        outliers[V] = x[x > m + 8 * s0]
+        y = x
+        for _ in range(2):
+            my, sy = y.mean(), y.std(ddof=1)
+            y = y[np.abs(y - my) <= 6 * sy]
+        my, sy = y.mean(), y.std(ddof=1)
+        zt = np.sort((y - my) / sy)
+        trim_D.append(sps.kstest(zt, cdf1).statistic)
+        del x, y, z, zt
+    V = [4 * k for k in sizes]
+    fig, axes = plt.subplots(1, 2, figsize=(6.8, 3.1))
+    axes[0].loglog(V, raw_D, marker="d", ms=4, lw=1.2, color="#5e548e",
+                   label="all samples")
+    axes[0].loglog(V, trim_D, marker="d", ms=4, lw=1.2, ls="--",
+                   color="#2a78d6", label=r"defect band removed ($|z|\leq6$)")
+    axes[0].set_xlabel("number of vertices $V$")
+    axes[0].set_ylabel("KS statistic $D$ vs Tracy–Widom $\\beta=1$")
+    axes[0].set_title("Bulk distance to $TW_1$")
+    axes[0].legend(fontsize=6.5, loc="lower left")
+
+    rng = np.random.default_rng(11)
+    ax = axes[1]
+    for VV, out in outliers.items():
+        if out.size == 0:
+            continue
+        jitter = rng.uniform(0.9, 1.1, out.size)
+        ax.semilogx(VV * jitter, out, ls="", marker="o", ms=2.2,
+                    color="#5e548e", alpha=0.5, markeredgewidth=0)
+    ax.axhline(RHO_K4_MINUS_E, ls="--", color=INK, lw=0.9)
+    ax.annotate(r"$\rho(K_4-e)$", xy=(1.01, RHO_K4_MINUS_E),
+                xycoords=("axes fraction", "data"), fontsize=6, color=INK,
+                va="center")
+    for name, value in K4E_DEFECTS.items():
+        ax.axhline(value, ls=(0, (1, 3)), color=INK_2, lw=0.9)
+    ax.annotate("rank $2$ defects", xy=(1.01, 2.5128),
+                xycoords=("axes fraction", "data"), fontsize=6, color=INK_2,
+                va="center")
+    ax.set_xlabel("number of vertices $V$")
+    ax.set_ylabel(r"outlier eigenvalues $\lambda > \mathrm{mean}+8\,\mathrm{std}$")
+    ax.set_title("The defect band above $\\rho$")
+    fig.subplots_adjust(wspace=0.42)
+    fig.suptitle("Covers of $K_4-e$: a dense rank-2 defect band at rate"
+                 " $k^{-1}$ over a $TW_1$ bulk", y=1.03)
     return fig
 
 
@@ -946,8 +1021,7 @@ def main():
          "matrix size 4*base. Dashed line: V^(-2/3) slope guide at the "
          "regular-graph amplitude.")
     save(fig_scaling(rows, SERIES[7:],
-                     "covers of $K_5$ and $K_5-e$ ($V = 5\\times$ cover"
-                     " degree)",
+                     "covers of the fixed bases $K_5$, $K_5-e$, $K_4-e$",
                      stat_phrase="largest new eigenvalue",
                      amplitude_conjectured=False),
          "scaling_loglog_k5_covers.png",
@@ -991,6 +1065,16 @@ def main():
          "fixed-base K5/K5-e families (moments contaminated by thin "
          "far-outlier tails; see the standardized-tail figure) are "
          "omitted.")
+    save(fig_k4e(),
+         "k4_minus_edge_bulk_and_defect_band.png",
+         "Covers of K4-e: left, the KS distance of the standardized sample "
+         "to TW1 with and without the defect band (|z|>6 removed) - the "
+         "raw distance grows at mid sizes because the base has cycle rank "
+         "2, so proper rank-2 defects (long thetas with branches; computed "
+         "values 2.51185 and 2.51369) bind above rho = sqrt(1+2 sqrt7) = "
+         "2.5082868 at rate ~1/k, with rank-3 shapes reaching ~2.530 at "
+         "~1/k^2; right, every sample above mean+8 std against V with the "
+         "computed rank-2 defect values overlaid.")
     save(fig_outlier_atoms(),
          "outlier_atoms_k5_families.png",
          "Every sample more than 8 standard deviations above the mean, "

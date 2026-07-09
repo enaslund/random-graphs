@@ -17,7 +17,7 @@ universal cover. The companion paper is `main.tex`.
 |---|---|
 | `main.tex`, `references.bib` | The paper. Figures are included from `images/`. |
 | `images/` | All figures: vector `.pdf` (used by the paper) plus `.png` previews. Generated, see [Reproducing the analysis](#reproducing-the-analysis). Described in `images/README.md`. |
-| `data/` | Raw eigenvalue samples: 1.35×10⁸ samples across nine series (~1.1 GB of `.npy` files, committed deliberately). Naming conventions in `data/README.md`. |
+| `data/` | Raw eigenvalue samples: 1.4×10⁸ samples across ten series (~1.2 GB of `.npy` files, committed deliberately). Naming conventions in `data/README.md`. |
 | `data_summary.csv`, `data_summary.md` | One row per data file: moments, gap to the Ramanujan threshold, empirical Ramanujan probability, and Kolmogorov-Smirnov distances to the candidate laws. Generated. |
 | `analysis/` | Analysis pipeline: `build_summary.py` writes the summary tables, `build_figures.py` writes every figure, `dataset_utils.py` holds the filename parsers, per-family thresholds, and Tracy-Widom reference constants. |
 | `random_graphs/` | The library that generated the data: cover constructors (`covers.py`), sparse eigensolver drivers (`eigenvalues.py`), permutation and matrix-representation samplers, and basic statistics (`stats.py`). |
@@ -41,12 +41,14 @@ files. All families have base degree 4.
 | quaternion covers | base n = 100 … 5000 (6) | 1,000,000 | uniform Q₈ voltages through the 4-dimensional real irreducible representation |
 | K₅ covers | cover degree k = 20 … 2000 (7) | 5,000,000 | uniform Sₖ voltages on the fixed base K₅ (V = 5k) |
 | K₅−e covers | cover degree k = 20 … 2000 (7) | 5,000,000 | uniform Sₖ voltages on the fixed base K₅ minus an edge (V = 5k) |
+| K₄−e covers | cover degree k = 25 … 2500 (7) | 1,000,000 | uniform Sₖ voltages on the fixed base K₄ minus an edge (V = 4k) |
 
 The abelian files are stored in base-graph-major order: `reshape(100000, 10)`
 groups the 10 covers sharing a base graph.
 
 The Ramanujan threshold (the spectral radius of the universal cover of the
-base) is 2√3 = 3.4641016… for every 4-regular family, and for the K₅−e covers
+base) is 2√3 = 3.4641016… for every 4-regular family, exactly
+√(1+2√7) = 2.5082868… for the K₄−e covers, and for the K₅−e covers
 
 ρ(K₅−e) = 3.26287646593635862827…,
 
