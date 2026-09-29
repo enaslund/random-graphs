@@ -76,6 +76,9 @@ EXCEPTIONAL = [
 
 FIGURES = {}  # filename -> description, for images/README.md
 
+# numpy 2 renamed trapz to trapezoid
+_trapezoid = getattr(np, "trapezoid", None) or np.trapz
+
 
 def setup_style():
     plt.rcParams.update({
@@ -497,7 +500,7 @@ def fig_edgeworth():
     F = tw_cdf_standardized(1)(t)
     f = tw_pdf_standardized(1)(t)
     psi = (t ** 2 - 1) * f
-    norm2 = np.trapz(psi * psi, t)
+    norm2 = _trapezoid(psi * psi, t)
 
     series = [
         ("simple", "data/simple/simple_deg4_V{V}_N5000000.npy",
@@ -521,7 +524,7 @@ def fig_edgeworth():
             ecdf = np.searchsorted(z, t, side="right") / z.size
             del z
             delta = ecdf - F
-            c = np.trapz(delta * psi, t) / norm2
+            c = _trapezoid(delta * psi, t) / norm2
             chats.append(abs(c))
             if name == "simple" and V in collapse_sizes:
                 collapse[V] = delta / c
@@ -1110,9 +1113,11 @@ def main():
          "Log-scale right tail P(lambda > x) at V=500,000: the simple "
          "model's tail dies out within ~1e-4 of the Ramanujan threshold "
          "2sqrt(3), while the permutation (multigraph) model has "
-         "outliers reaching lambda ~ 3.54, i.e. localized eigenvalues "
-         "from multi-edges/loops - the reason that model deviates from "
-         "Tracy-Widom.")
+         "outliers reaching lambda ~ 3.54: localized eigenvalues of "
+         "cycle rank two defects (7/2, the root of lambda^3 = 8 lambda + "
+         "16, and 3.4675), at rate ~1/V. They inflate the sample moments "
+         "while the bulk follows TW1 with the proven constant (see "
+         "multigraph_model_bulk_and_atoms.png). Not used in the paper.")
     save(fig_mass_left(rows),
          "mass_left_of_mean_vs_size_all_families.png",
          "Replication of MNS's decisive experiment at ~50x their sample "
@@ -1220,6 +1225,9 @@ def main():
              "quantile-level evidence for the symmetry-class selection.")
         del z
 
+    import build_figures_extended
+    build_figures_extended.make_all(rows, save=save)
+
     lines = [
         "# Figures",
         "",
@@ -1232,10 +1240,13 @@ def main():
         " width) and a `.png` preview for browsing. Descriptions below"
         " are keyed by the `.png` name.",
         "",
-        "Everywhere below, samples are standardized to mean 0 and std 1,"
+        "Unless a description says otherwise (the parameter-free figures"
+        " use s = (lambda - rho) n^(2/3) / c with the conjectured constants"
+        " and nothing fitted), samples are standardized to mean 0 and std 1,"
         " and the Tracy-Widom laws are likewise standardized from their"
         " original normalization (TW beta=1: mean -1.2065335746,"
-        " std 1.2679830577).",
+        " std 1.2679830577). The parameter-free figures read"
+        " finite_size_fits.csv, written by analysis/finite_size.py.",
         "",
     ]
     for fname in sorted(FIGURES):
